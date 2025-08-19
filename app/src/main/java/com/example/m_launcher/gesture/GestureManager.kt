@@ -26,6 +26,10 @@ class GestureManager(
     private val vibrator = context.getSystemService<Vibrator>()
 
     private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(e: MotionEvent): Boolean {
+            // Return true to ensure we continue receiving gesture events (required for onFling)
+            return true
+        }
         override fun onFling(
             e1: MotionEvent?,
             e2: MotionEvent,

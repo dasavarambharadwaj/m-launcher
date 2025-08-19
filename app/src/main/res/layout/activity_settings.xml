@@ -56,6 +56,71 @@
                 android:layout_marginBottom="@dimen/material_expressive_spacing_large"
                 android:nestedScrollingEnabled="false" />
 
+            <!-- Gestures Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gestures"
+                android:textAppearance="@style/LauncherTextAppearance"
+                android:textSize="@dimen/material_expressive_text_size_title"
+                android:textColor="@color/launcher_text_dynamic"
+                android:layout_marginBottom="@dimen/material_expressive_spacing_medium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Assign apps for left and right swipes"
+                android:textAppearance="@style/LauncherTextAppearance"
+                android:textSize="14sp"
+                android:textColor="@color/launcher_text_secondary"
+                android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/material_expressive_spacing_large">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Left Swipe App"
+                    android:textAppearance="@style/LauncherTextAppearance"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/left_swipe_picker"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select app"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Right Swipe App"
+                    android:textAppearance="@style/LauncherTextAppearance"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:layout_marginTop="@dimen/material_expressive_spacing_large"
+                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/right_swipe_picker"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select app"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp" />
+            </LinearLayout>
+
             <!-- Available Apps Section -->
             <TextView
                 android:layout_width="match_parent"

@@ -214,7 +214,7 @@
   - Test search result accuracy and ranking with different query types
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8_
 
-- [ ] 29. Implement GestureManager for left/right swipe detection
+- [x] 29. Implement GestureManager for left/right swipe detection
   - Create GestureManager class to handle advanced gesture detection
   - Add left and right swipe gesture recognition using GestureDetector
   - Implement swipe velocity and distance thresholds for reliable detection
@@ -222,7 +222,7 @@
   - Provide haptic feedback for swipe gesture recognition
   - _Requirements: 9.3, 9.4, 9.5_
 
-- [ ] 30. Create gesture configuration in settings
+- [x] 30. Create gesture configuration in settings
   - Add GestureConfig data model for storing swipe app assignments
   - Implement Gestures tab in settings with app selection for each direction
   - Add persistence for swipe gesture configurations using SettingsManager

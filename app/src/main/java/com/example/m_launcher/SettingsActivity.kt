@@ -14,8 +14,10 @@ import com.example.m_launcher.adapter.FavoritesAdapter
 import com.example.m_launcher.adapter.InstalledAppsAdapter
 import com.example.m_launcher.data.FavoriteApp
 import com.example.m_launcher.data.InstalledApp
+import com.example.m_launcher.data.GestureConfig
 import com.example.m_launcher.manager.FavoritesManager
 import com.example.m_launcher.repository.AppRepository
+import com.example.m_launcher.manager.SettingsManager
 import com.example.m_launcher.utils.ErrorHandler
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
@@ -28,6 +30,7 @@ import kotlinx.coroutines.launch
 class SettingsActivity : AppCompatActivity() {
     
     private lateinit var favoritesManager: FavoritesManager
+    private lateinit var settingsManager: SettingsManager
     private lateinit var appRepository: AppRepository
     private lateinit var favoritesAdapter: FavoritesAdapter
     private lateinit var installedAppsAdapter: InstalledAppsAdapter
@@ -37,9 +40,12 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var installedAppsRecyclerView: RecyclerView
     private lateinit var saveButton: MaterialButton
     private lateinit var cancelButton: MaterialButton
+    private lateinit var leftSwipePicker: MaterialButton
+    private lateinit var rightSwipePicker: MaterialButton
     
     private var currentFavorites = mutableListOf<FavoriteApp>()
     private var installedApps = listOf<InstalledApp>()
+    private var gestureConfig: GestureConfig = GestureConfig()
     
     companion object {
         private const val TAG = "SettingsActivity"
@@ -74,6 +80,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun initializeComponents() {
         // Initialize managers
         favoritesManager = FavoritesManager(this)
+        settingsManager = SettingsManager(this)
         appRepository = AppRepository(this)
         
         // Initialize views
@@ -82,6 +89,8 @@ class SettingsActivity : AppCompatActivity() {
         installedAppsRecyclerView = findViewById(R.id.installed_apps_recycler_view)
         saveButton = findViewById(R.id.save_button)
         cancelButton = findViewById(R.id.cancel_button)
+        leftSwipePicker = findViewById(R.id.left_swipe_picker)
+        rightSwipePicker = findViewById(R.id.right_swipe_picker)
     }
     
     /**
@@ -197,11 +206,34 @@ class SettingsActivity : AppCompatActivity() {
         currentFavorites.clear()
         currentFavorites.addAll(favoritesManager.loadFavorites())
         favoritesAdapter.notifyDataSetChanged()
+
+        // Load gesture configuration
+        gestureConfig = settingsManager.loadGestureConfig()
+        updateGesturePickersText()
         
         // Load installed apps asynchronously
         lifecycleScope.launch {
             try {
                 installedApps = appRepository.getAllLaunchableApps()
+
+                // Clean up gesture selections if apps are uninstalled
+                val leftInstalled = gestureConfig.leftSwipePackage?.let { pkg ->
+                    installedApps.any { it.packageName == pkg }
+                } ?: true
+                val rightInstalled = gestureConfig.rightSwipePackage?.let { pkg ->
+                    installedApps.any { it.packageName == pkg }
+                } ?: true
+
+                if (!leftInstalled || !rightInstalled) {
+                    if (!leftInstalled) {
+                        gestureConfig = gestureConfig.copy(leftSwipePackage = null, leftSwipeName = null)
+                        ErrorHandler.handleAppUninstalled(this@SettingsActivity, "Left swipe app")
+                    }
+                    if (!rightInstalled) {
+                        gestureConfig = gestureConfig.copy(rightSwipePackage = null, rightSwipeName = null)
+                        ErrorHandler.handleAppUninstalled(this@SettingsActivity, "Right swipe app")
+                    }
+                }
                 
                 // Update adapter with selected packages
                 installedAppsAdapter.updateApps(
@@ -209,6 +241,7 @@ class SettingsActivity : AppCompatActivity() {
                     selectedPackages = currentFavorites.map { it.packageName }.toSet()
                 )
                 
+                updateGesturePickersText()
                 Log.d(TAG, "Loaded ${installedApps.size} installed apps")
             } catch (e: Exception) {
                 ErrorHandler.handleAppRepositoryError(this@SettingsActivity, e)
@@ -227,6 +260,57 @@ class SettingsActivity : AppCompatActivity() {
         cancelButton.setOnClickListener {
             finish()
         }
+
+        leftSwipePicker.setOnClickListener {
+            showGestureAppPicker(isLeft = true)
+        }
+
+        rightSwipePicker.setOnClickListener {
+            showGestureAppPicker(isLeft = false)
+        }
+    }
+
+    private fun updateGesturePickersText() {
+        leftSwipePicker.text = gestureConfig.leftSwipeName ?: "Select app"
+        rightSwipePicker.text = gestureConfig.rightSwipeName ?: "Select app"
+    }
+
+    private fun showGestureAppPicker(isLeft: Boolean) {
+        val items = installedApps.map { it.displayName }.toTypedArray()
+        val context = this
+        val builder = android.app.AlertDialog.Builder(context)
+            .setTitle(if (isLeft) "Choose app for Left Swipe" else "Choose app for Right Swipe")
+            .setItems(items) { dialog, which ->
+                val app = installedApps[which]
+                if (isLeft) {
+                    gestureConfig = gestureConfig.copy(
+                        leftSwipePackage = app.packageName,
+                        leftSwipeName = app.displayName
+                    )
+                } else {
+                    gestureConfig = gestureConfig.copy(
+                        rightSwipePackage = app.packageName,
+                        rightSwipeName = app.displayName
+                    )
+                }
+                updateGesturePickersText()
+            }
+            .setNegativeButton("Cancel", null)
+
+        // Allow clearing selection if set
+        val hasSelection = if (isLeft) gestureConfig.leftSwipePackage != null else gestureConfig.rightSwipePackage != null
+        if (hasSelection) {
+            builder.setNeutralButton("Clear") { _, _ ->
+                gestureConfig = if (isLeft) {
+                    gestureConfig.copy(leftSwipePackage = null, leftSwipeName = null)
+                } else {
+                    gestureConfig.copy(rightSwipePackage = null, rightSwipeName = null)
+                }
+                updateGesturePickersText()
+            }
+        }
+
+        builder.show()
     }
     
     /**
@@ -303,12 +387,16 @@ class SettingsActivity : AppCompatActivity() {
             // Save favorites
             val success = favoritesManager.saveFavorites(currentFavorites)
             
-            if (success) {
-                Log.d(TAG, "Favorites saved successfully")
+            // Save gesture configuration regardless of favorites success
+            val gestureSaved = settingsManager.saveGestureConfig(gestureConfig)
+
+            if (success && gestureSaved) {
+                Log.d(TAG, "Settings saved successfully")
                 setResult(RESULT_OK)
                 finish()
             } else {
-                ErrorHandler.handleFavoritesSaveError(this, RuntimeException("Save operation failed"))
+                if (!success) ErrorHandler.handleFavoritesSaveError(this, RuntimeException("Save operation failed"))
+                if (!gestureSaved) ErrorHandler.handleValidationError(this, "Could not save gesture configuration")
             }
         } catch (e: Exception) {
             ErrorHandler.handleFavoritesSaveError(this, e)

@@ -17,6 +17,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.m_launcher.data.FavoriteApp
 import com.example.m_launcher.manager.FavoritesManager
+import com.example.m_launcher.manager.SettingsManager
 import com.example.m_launcher.utils.ErrorHandler
 import com.example.m_launcher.gesture.GestureManager
 
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var wallpaperContrastManager: WallpaperContrastManager
     private lateinit var appListView: AppListView
     private lateinit var favoritesManager: FavoritesManager
+    private lateinit var settingsManager: SettingsManager
     private lateinit var gestureDetector: GestureDetector
     private lateinit var gestureManager: GestureManager
     private lateinit var vibrator: Vibrator
@@ -152,6 +154,7 @@ class MainActivity : AppCompatActivity() {
         
         // Initialize managers
         favoritesManager = FavoritesManager(this)
+        settingsManager = SettingsManager(this)
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
         
         // Set up app click listener
@@ -242,13 +245,24 @@ class MainActivity : AppCompatActivity() {
      */
     private fun handleLeftSwipe() {
         Log.d(TAG, "Left swipe detected")
-        // Show temporary visual feedback for testing
-        android.widget.Toast.makeText(
-            this,
-            "Left Swipe Detected",
-            android.widget.Toast.LENGTH_SHORT
-        ).show()
         performHapticFeedback()
+        val config = settingsManager.loadGestureConfig()
+        val pkg = config.leftSwipePackage
+        val name = config.leftSwipeName ?: "App"
+        if (pkg.isNullOrBlank()) {
+            android.widget.Toast.makeText(this, "Left swipe not configured", android.widget.Toast.LENGTH_SHORT).show()
+            return
+        }
+        try {
+            val intent = packageManager.getLaunchIntentForPackage(pkg)
+            if (intent != null) {
+                startActivity(intent)
+            } else {
+                ErrorHandler.handleAppLaunchError(this, name, RuntimeException("No launch intent available"))
+            }
+        } catch (e: Exception) {
+            ErrorHandler.handleAppLaunchError(this, name, e)
+        }
     }
     
     /**
@@ -257,13 +271,24 @@ class MainActivity : AppCompatActivity() {
      */
     private fun handleRightSwipe() {
         Log.d(TAG, "Right swipe detected")
-        // Show temporary visual feedback for testing
-        android.widget.Toast.makeText(
-            this,
-            "Right Swipe Detected",
-            android.widget.Toast.LENGTH_SHORT
-        ).show()
         performHapticFeedback()
+        val config = settingsManager.loadGestureConfig()
+        val pkg = config.rightSwipePackage
+        val name = config.rightSwipeName ?: "App"
+        if (pkg.isNullOrBlank()) {
+            android.widget.Toast.makeText(this, "Right swipe not configured", android.widget.Toast.LENGTH_SHORT).show()
+            return
+        }
+        try {
+            val intent = packageManager.getLaunchIntentForPackage(pkg)
+            if (intent != null) {
+                startActivity(intent)
+            } else {
+                ErrorHandler.handleAppLaunchError(this, name, RuntimeException("No launch intent available"))
+            }
+        } catch (e: Exception) {
+            ErrorHandler.handleAppLaunchError(this, name, e)
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

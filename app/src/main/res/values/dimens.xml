@@ -19,6 +19,9 @@
     <!-- Material Expressive touch targets -->
     <dimen name="material_expressive_touch_target_min">48dp</dimen>
     
+    <!-- Material Expressive card design -->
+    <dimen name="material_expressive_card_corner_radius">12dp</dimen>
+    
     <!-- Material Expressive minimum widths for app list -->
     <dimen name="material_expressive_app_list_min_width">120dp</dimen>
 </resources>
