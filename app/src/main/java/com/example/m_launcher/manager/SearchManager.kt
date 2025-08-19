@@ -54,6 +54,16 @@ class SearchManager(private val context: Context) {
             throw e
         }
     }
+
+    /**
+     * Return all apps as search results (sorted alphabetically)
+     */
+    fun getAllAppsResults(maxResults: Int = PERFORMANCE_MAX_RESULTS): List<SearchResult> {
+        val list = cachedApps
+            .sortedBy { it.displayName.lowercase(Locale.getDefault()) }
+            .map { app -> SearchResult(app, 0.0, MatchType.EXACT_CONTAINS) }
+        return list.take(maxResults)
+    }
     
     /**
      * Perform fuzzy search with real-time filtering and performance optimization

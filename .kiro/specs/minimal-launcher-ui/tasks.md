@@ -285,3 +285,15 @@
   - Verify gesture configurations across different devices
   - Add performance tests for settings operations
   - _Requirements: 9.1-9.6, 10.1-10.6, 11.1-11.6, 12.1-12.7_
+
+- [ ] 38. Implement swipe down to open notification panel
+  - Detect swipe down gesture in `MainActivity`
+  - Expand notification shade using `StatusBarManager.expandNotificationsPanel()`
+  - Handle API differences and fail gracefully when unavailable
+  - _Requirements: 13.1, 13.2_
+
+- [ ] 39. Show all apps by default in SearchActivity and submit top result
+  - Update `SearchManager` to provide all-apps result set
+  - On search open or empty query, list all apps alphabetically
+  - On IME search/enter, launch top result; if no result, perform Google search in default browser
+  - _Requirements: 14.1, 14.3, 14.4_

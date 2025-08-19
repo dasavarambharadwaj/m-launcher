@@ -17,7 +17,7 @@ The minimal launcher UI will be implemented as an Android application that regis
 - **FavoritesManager**: Manages favorite app storage, retrieval, and persistence
 - **AppRepository**: Handles installed app discovery and metadata retrieval
 - **SearchManager**: Handles fuzzy search logic and app filtering
-- **GestureManager**: Handles left/right swipe gestures and app launching
+- **GestureManager**: Handles left/right swipe gestures and app launching; swipe down expands notification shade
 - **LayoutManager**: Manages favorites positioning and font size configurations
 - **SettingsManager**: Centralized settings storage and retrieval system
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     // Handles system home button presses
     // Manages configurable app list display with custom positioning
     // Implements wallpaper transparency
-    // Handles multiple gesture types (long press, swipe up, left/right swipes)
+    // Handles multiple gesture types (long press, swipe up, left/right swipes, swipe down to notifications)
     // Applies dynamic font sizing and layout configurations
 }
 ```
@@ -49,44 +49,28 @@ class MainActivity : AppCompatActivity() {
 - Detect long press gestures and navigate to enhanced settings
 - Detect swipe up gestures and launch search interface
 - Handle left/right swipe gestures to launch configured apps
+- Handle swipe down to expand notification shade
 - Load and apply all user configurations (favorites, layout, gestures, typography)
 - Provide real-time configuration updates without app restart
 
-### AppListView
+### SearchActivity
 ```kotlin
-class AppListView : LinearLayout {
-    // Custom view for displaying configurable favorite apps
-    // Renders text-based app entries (1-7 apps)
-    // Handles app selection interactions
-    // Dynamically adapts to user-configured favorites
+class SearchActivity : AppCompatActivity() {
+    // Full-screen search interface
+    // Handles fuzzy search input and results display
+    // Manages keyboard visibility and search interactions
 }
 ```
 
 **Responsibilities:**
-- Render user-configured favorite apps as text labels (1-7 apps)
-- Apply minimal styling to text elements
-- Handle touch interactions for app launching (future functionality)
-- Maintain consistent spacing and alignment regardless of app count
-- Dynamically update display when favorites change
-
-### SettingsActivity
-```kotlin
-class SettingsActivity : AppCompatActivity() {
-    // Enhanced tabbed configuration interface
-    // Manages all launcher settings in organized sections
-    // Provides real-time preview and immediate application of changes
-}
-```
-
-**Responsibilities:**
-- Display tabbed interface with Favorites, Gestures, and Layout sections
-- Allow users to select/deselect up to 7 favorite apps in Favorites tab
-- Provide left/right swipe app configuration in Gestures tab
-- Offer favorites positioning and font size controls in Layout tab
-- Save all configurations to persistent storage
-- Apply settings immediately upon save action
-- Return to home screen with updated configurations
-- Maintain minimal design aesthetic with enhanced usability
+- Display full-screen black search interface
+- Show search input field at top of screen
+- Automatically display keyboard on interface open
+- Handle search input and trigger fuzzy search
+- Display search results in minimal text format
+- List all apps by default when query is empty
+- On submit/enter: launch the top app result; if none, open a web search in default browser
+- Manage swipe down/back gestures to close search
 
 ### GestureManager
 ```kotlin
@@ -120,7 +104,6 @@ class LayoutManager {
 - Manage font size configurations for all text elements
 - Ensure proper spacing and proportions with different font sizes
 - Maintain text readability against various wallpaper backgrounds
-- Provide real-time layout preview in settings
 - Validate layout configurations for accessibility compliance
 
 ### SettingsManager
@@ -156,24 +139,6 @@ class FavoritesManager {
 - Handle app uninstallation scenarios (remove from favorites)
 - Persist favorites across app restarts
 
-### SearchActivity
-```kotlin
-class SearchActivity : AppCompatActivity() {
-    // Full-screen search interface
-    // Handles fuzzy search input and results display
-    // Manages keyboard visibility and search interactions
-}
-```
-
-**Responsibilities:**
-- Display full-screen black search interface
-- Show search input field at top of screen
-- Automatically display keyboard on interface open
-- Handle search input and trigger fuzzy search
-- Display search results in minimal text format
-- Handle app selection and launch from search results
-- Manage swipe down/back gestures to close search
-
 ### SearchManager
 ```kotlin
 class SearchManager {
@@ -189,6 +154,7 @@ class SearchManager {
 - Provide real-time search suggestions as user types
 - Cache search results for performance optimization
 - Handle special characters and multilingual app names
+- Provide all-apps result when query is empty
 
 ### AppRepository
 ```kotlin
@@ -211,6 +177,63 @@ class AppRepository {
 - Specify typography settings
 - Ensure high contrast for readability
 - Support both light and dark wallpapers
+
+## UI Design Specifications
+
+### Layout Structure
+
+#### Home Screen (MainActivity)
+```
+MainActivity (Full Screen)
+├── StatusBar (Transparent)
+├── AppListView (Centered)
+│   ├── FavoriteApp1 (TextView)
+│   ├── FavoriteApp2 (TextView)
+│   ├── ... (1-7 apps total)
+│   └── FavoriteAppN (TextView)
+└── NavigationBar (Transparent)
+```
+
+#### Enhanced Settings Page (SettingsActivity)
+```
+SettingsActivity (Full Screen)
+├── StatusBar (Transparent)
+├── ToolBar (Minimal)
+│   └── "Launcher Settings" (Title)
+├── TabLayout (Material Expressive)
+│   ├── "Favorites" (Tab)
+│   ├── "Gestures" (Tab)
+│   └── "Layout" (Tab)
+├── ViewPager2 (Tab Content)
+│   ├── FavoritesFragment (Selected apps + Edit button popup for up to 7)
+│   ├── GesturesFragment (Left/Right app selectors in dark dialogs)
+│   └── LayoutFragment (Horizontal/Vertical position + Font size, dark dialogs)
+├── Save Button (Fixed Bottom)
+└── NavigationBar (Transparent)
+```
+
+#### Search Interface (SearchActivity)
+```
+SearchActivity (Full Screen Black)
+├── StatusBar (Black)
+├── SearchInputField (Top, Focused)
+│   └── Keyboard (Auto-displayed)
+├── SearchResults (RecyclerView)
+│   ├── All apps by default (sorted)
+│   ├── MatchingApp1 (TextView)
+│   ├── MatchingApp2 (TextView)
+│   └── ...
+└── NavigationBar (Black)
+```
+
+### Visual Design
+- Home Screen: transparent background; text color dynamic contrast
+- Settings: dark with white text, minimalist
+- Search: black background with white text; shows all apps by default
+
+## User Interaction Design (additions)
+- Swipe down on Home: expand notifications panel
+- Search submit: launch top result; if none, open default browser with Google search query
 
 ## Data Models
 
@@ -327,220 +350,6 @@ data class AdvancedSettings(
 ```
 
 **Purpose:** Comprehensive settings container for all launcher configurations
-
-## UI Design Specifications
-
-### Layout Structure
-
-#### Home Screen (MainActivity)
-```
-MainActivity (Full Screen)
-├── StatusBar (Transparent)
-├── AppListView (Centered)
-│   ├── FavoriteApp1 (TextView)
-│   ├── FavoriteApp2 (TextView)
-│   ├── ... (1-7 apps total)
-│   └── FavoriteAppN (TextView)
-└── NavigationBar (Transparent)
-```
-
-#### Enhanced Settings Page (SettingsActivity)
-```
-SettingsActivity (Full Screen)
-├── StatusBar (Transparent)
-├── ToolBar (Minimal)
-│   └── "Launcher Settings" (Title)
-├── TabLayout (Material Expressive)
-│   ├── "Favorites" (Tab)
-│   ├── "Gestures" (Tab)
-│   └── "Layout" (Tab)
-├── ViewPager2 (Tab Content)
-│   ├── FavoritesFragment
-│   │   ├── "Selected Favorites" (Section)
-│   │   │   └── RecyclerView (Selected Apps, Reorderable)
-│   │   └── "Available Apps" (Section)
-│   │       └── RecyclerView (All Installed Apps, Selectable)
-│   ├── GesturesFragment
-│   │   ├── "Left Swipe App" (Section)
-│   │   │   └── AppSelector (Single App Selection)
-│   │   └── "Right Swipe App" (Section)
-│   │       └── AppSelector (Single App Selection)
-│   └── LayoutFragment
-│       ├── "Favorites Position" (Section)
-│       │   ├── HorizontalPositionSelector (Left/Center/Right)
-│       │   └── VerticalPositionSelector (Top/Center/Bottom)
-│       └── "Font Size" (Section)
-│           └── FontSizeSelector (Small/Medium/Large/Extra Large)
-├── Save Button (Fixed Bottom, Material Expressive)
-└── NavigationBar (Transparent)
-```
-
-#### Search Interface (SearchActivity)
-```
-SearchActivity (Full Screen Black)
-├── StatusBar (Black)
-├── SearchInputField (Top, Focused)
-│   └── Keyboard (Auto-displayed)
-├── SearchResults (ScrollView)
-│   ├── MatchingApp1 (TextView)
-│   ├── MatchingApp2 (TextView)
-│   └── ... (Fuzzy search results)
-└── NavigationBar (Black)
-```
-
-### Visual Design
-
-#### Home Screen
-- **Background**: Fully transparent to show device wallpaper
-- **Text Color**: Dynamic based on wallpaper (white/black for contrast)
-- **Typography**: Clean, sans-serif font (Roboto)
-- **Text Size**: 18sp for optimal readability
-- **Spacing**: 24dp between app entries (adaptive for 1-7 apps)
-- **Alignment**: Center-aligned vertically and horizontally
-- **Long Press**: Haptic feedback with subtle visual indication
-
-#### Settings Page
-- **Background**: Semi-transparent overlay maintaining wallpaper visibility
-- **Text Color**: Consistent with home screen dynamic contrast
-- **Typography**: Same Roboto font family for consistency
-- **Text Size**: 16sp for settings content, 18sp for section headers
-- **Layout**: Clean list-based interface with minimal dividers
-- **Selection**: Subtle highlight for selected favorites
-- **Buttons**: Text-based buttons maintaining minimal aesthetic
-
-#### Search Interface
-- **Background**: Solid black (#000000) full-screen overlay
-- **Search Field**: White text on black background at top of screen
-- **Text Color**: White (#FFFFFF) for maximum contrast on black
-- **Typography**: Same Roboto font family for consistency
-- **Text Size**: 18sp for search input, 16sp for results
-- **Layout**: Vertical list of search results below input field
-- **Keyboard**: Automatically displayed when interface opens
-- **Results**: Real-time filtering as user types
-- **Spacing**: 20dp between search results for easy touch targets
-
-### Theme Configuration
-```xml
-<style name="LauncherTheme" parent="Theme.MaterialComponents.NoActionBar">
-    <item name="android:windowBackground">@android:color/transparent</item>
-    <item name="android:windowIsTranslucent">true</item>
-    <item name="android:windowNoTitle">true</item>
-    <item name="android:windowFullscreen">true</item>
-</style>
-```
-
-### Color Palette
-- **Primary Text**: #FFFFFF (white) or #000000 (black) based on wallpaper
-- **Background**: Transparent
-- **Accent**: None (minimal approach)
-
-## User Interaction Design
-
-### Long Press Gesture Detection
-```kotlin
-// MainActivity gesture handling
-private val longPressDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
-    override fun onLongPress(e: MotionEvent) {
-        // Trigger haptic feedback
-        // Navigate to SettingsActivity
-        // Apply transition animation
-    }
-})
-```
-
-**Implementation:**
-- Detect long press anywhere on home screen background
-- Provide haptic feedback (vibration) on gesture recognition
-- Smooth transition animation to settings page
-- Minimum 500ms press duration for activation
-
-### Favorites Configuration Flow
-1. **Access Settings**: Long press on home screen
-2. **View Current Favorites**: Display currently selected apps at top
-3. **Browse Available Apps**: Scrollable list of all installed apps
-4. **Select/Deselect**: Tap to add/remove from favorites (max 7)
-5. **Reorder Favorites**: Drag and drop in selected favorites section
-6. **Save Configuration**: Persist changes and return to home screen
-7. **Update Display**: Home screen reflects new favorite configuration
-
-### App Selection Logic
-- **Minimum**: At least 1 app must be selected as favorite
-- **Maximum**: Up to 7 apps can be selected as favorites
-- **Default Fallback**: If no favorites configured, show Phone, Messages, Browser
-- **Validation**: Prevent selection of more than 7 apps
-- **Persistence**: Save configuration immediately on changes
-
-## Data Persistence
-
-### SharedPreferences Storage
-```kotlin
-// Favorites storage structure
-private const val PREFS_NAME = "launcher_favorites"
-private const val KEY_FAVORITE_APPS = "favorite_apps_json"
-private const val KEY_FAVORITES_COUNT = "favorites_count"
-
-// JSON structure for favorite apps
-{
-  "favorites": [
-    {
-      "packageName": "com.android.dialer",
-      "displayName": "Phone",
-      "order": 0
-    },
-    {
-      "packageName": "com.android.mms",
-      "displayName": "Messages", 
-      "order": 1
-    }
-  ]
-}
-```
-
-**Storage Strategy:**
-- Use SharedPreferences for lightweight favorite app storage
-- JSON serialization for complex favorite app data
-- Atomic updates to prevent data corruption
-- Backup and restore capability for app data migration
-
-### Default Configuration
-```kotlin
-// Default apps when no favorites configured
-private val defaultApps = listOf(
-    FavoriteApp("com.android.dialer", "Phone", 0),
-    FavoriteApp("com.android.mms", "Messages", 1),
-    FavoriteApp("com.android.browser", "Browser", 2)
-)
-```
-
-## Error Handling
-
-### Wallpaper Integration Failures
-- **Fallback**: Use system default background color
-- **Detection**: Monitor wallpaper changes and adapt text color accordingly
-
-### Theme Application Issues
-- **Fallback**: Use high-contrast white text on transparent background
-- **Validation**: Ensure text remains readable in all scenarios
-
-### Layout Rendering Problems
-- **Fallback**: Use standard LinearLayout with default spacing
-- **Recovery**: Graceful degradation to basic text list
-
-### Favorites Configuration Errors
-- **Invalid App Selection**: Validate package names against installed apps
-- **Storage Failures**: Fallback to default apps if favorites cannot be loaded
-- **Corrupted Data**: Reset to default configuration and notify user
-- **App Uninstallation**: Remove uninstalled apps from favorites automatically
-
-### Settings Page Navigation Issues
-- **Long Press Detection Failure**: Provide alternative settings access method
-- **Activity Launch Problems**: Graceful error handling with user notification
-- **Data Synchronization**: Ensure home screen updates reflect settings changes
-
-### App Repository Failures
-- **PackageManager Errors**: Handle security exceptions gracefully
-- **Missing App Metadata**: Use package name as fallback display name
-- **Permission Issues**: Request necessary permissions or disable affected features
 
 ## Testing Strategy
 

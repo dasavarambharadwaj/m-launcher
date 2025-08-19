@@ -197,20 +197,22 @@ class MainActivity : AppCompatActivity() {
                 val deltaY = e2.y - e1.y
                 val deltaX = e2.x - e1.x
                 
-                // Check for swipe up gesture
-                if (Math.abs(deltaY) > Math.abs(deltaX) && 
-                    deltaY < -100 && // Minimum swipe distance (upward)
-                    Math.abs(velocityY) > 500) { // Minimum velocity threshold
-                    
-                    Log.d(TAG, "Swipe up detected, opening search")
-                    
-                    // Provide haptic feedback for swipe gesture
-                    performHapticFeedback()
-                    
-                    // Launch search interface
-                    openSearch()
-                    
-                    return true
+                // Vertical swipe gestures
+                if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    // Swipe up -> open search
+                    if (deltaY < -100 && Math.abs(velocityY) > 500) {
+                        Log.d(TAG, "Swipe up detected, opening search")
+                        performHapticFeedback()
+                        openSearch()
+                        return true
+                    }
+                    // Swipe down -> open notifications panel
+                    if (deltaY > 100 && Math.abs(velocityY) > 500) {
+                        Log.d(TAG, "Swipe down detected, expanding notifications")
+                        performHapticFeedback()
+                        expandNotificationShade()
+                        return true
+                    }
                 }
                 
                 return false
@@ -416,6 +418,30 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e(TAG, "Error launching search activity", e)
             ErrorHandler.handleSearchNavigationError(this, e)
+        }
+    }
+
+    /**
+     * Expand the notifications panel (status bar) on swipe down
+     */
+    private fun expandNotificationShade() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // Use status bar manager where available
+                val statusBarService = getSystemService("statusbar")
+                val clazz = Class.forName("android.app.StatusBarManager")
+                val expand = clazz.getMethod("expandNotificationsPanel")
+                expand.invoke(statusBarService)
+            } else {
+                @Suppress("PrivateApi")
+                val statusBarService = getSystemService("statusbar")
+                val statusBarManager = Class.forName("android.app.StatusBarManager")
+                val method = statusBarManager.getMethod("expandNotificationsPanel")
+                method.isAccessible = true
+                method.invoke(statusBarService)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not expand notifications panel", e)
         }
     }
     

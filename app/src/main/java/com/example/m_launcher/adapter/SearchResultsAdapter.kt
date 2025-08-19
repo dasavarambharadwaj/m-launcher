@@ -15,6 +15,7 @@ class SearchResultsAdapter(
 ) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>() {
     
     private var searchResults: List<SearchManager.SearchResult> = emptyList()
+    fun getItem(position: Int): SearchManager.SearchResult = searchResults[position]
     
     companion object {
         private const val TAG = "SearchResultsAdapter"

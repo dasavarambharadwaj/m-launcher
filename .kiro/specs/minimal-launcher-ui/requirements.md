@@ -95,6 +95,7 @@ This feature involves creating a minimal Android launcher that focuses on simpli
 7. WHEN I tap on a search result THEN the system SHALL launch the selected app and close the search interface
 8. WHEN I swipe down or press back THEN the system SHALL close the search interface and return to the home screen
 
+
 ### Requirement 9
 
 **User Story:** As a user, I want to configure apps that launch when I swipe left or right on the home screen, so that I can quickly access my most important applications with simple gestures.
@@ -148,3 +149,22 @@ This feature involves creating a minimal Android launcher that focuses on simpli
 6. WHEN I click save THEN the system SHALL apply all settings immediately and return to the updated home screen
 7. WHEN settings are applied THEN the system SHALL provide visual feedback confirming the changes
 
+### Requirement 13
+
+**User Story:** As a user, I want to pull down the notification panel from the launcher with a swipe down, so I can quickly access notifications and quick settings.
+
+#### Acceptance Criteria
+
+1. WHEN I swipe down on the home screen THEN the system SHALL expand the notification shade
+2. WHEN the notification panel expansion is not available on the device THEN the system SHALL fail gracefully without crashing
+
+### Requirement 14
+
+**User Story:** As a user, I want the search screen to list all apps by default and submit the top result on search/enter, so I can launch quickly; if no app is matched, I want a Google search fallback.
+
+#### Acceptance Criteria
+
+1. WHEN I open the search interface THEN the system SHALL display all installed apps sorted alphabetically by default
+2. WHEN I type a query THEN the system SHALL filter apps in real time using fuzzy search
+3. WHEN I tap the search action on the keyboard or press enter THEN the system SHALL launch the first result if available
+4. WHEN there are no matching apps THEN the system SHALL open a web search for my query in the default browser

@@ -214,6 +214,13 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
                 // No action needed after text changes
             }
         })
+        // Handle IME action and enter key
+        searchInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                handleSearchSubmit()
+                true
+            } else false
+        }
         
         // Set up focus management and cursor styling
         searchInput.requestFocus()
@@ -237,6 +244,37 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
             Log.d(TAG, "Keyboard displayed for search input")
         } catch (e: Exception) {
             Log.w(TAG, "Could not show keyboard", e)
+        }
+    }
+
+    /**
+     * Handle search submission: launch top app or default to web search
+     */
+    private fun handleSearchSubmit() {
+        val adapterCount = searchResultsAdapter.itemCount
+        if (adapterCount > 0) {
+            // Launch the first result
+            val field = RecyclerView::class.java.getDeclaredField("mAdapter")
+            field.isAccessible = true
+            val adapter = field.get(searchResults) as SearchResultsAdapter
+            val method = SearchResultsAdapter::class.java.getDeclaredMethod("getItem", Int::class.javaPrimitiveType)
+            method.isAccessible = true
+            val result = method.invoke(adapter, 0) as com.example.m_launcher.manager.SearchManager.SearchResult
+            launchAppFromSearch(result)
+        } else {
+            // Fallback: web search with default browser
+            val q = searchInput.text.toString().trim()
+            if (q.isNotEmpty()) {
+                try {
+                    val uri = android.net.Uri.parse("https://www.google.com/search?q=" + java.net.URLEncoder.encode(q, "UTF-8"))
+                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
+                    finish()
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error launching web search", e)
+                }
+            }
         }
     }
     
@@ -359,6 +397,9 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
             try {
                 searchManager.initialize()
                 Log.d(TAG, "SearchManager initialized successfully")
+                // Show all apps by default
+                val all = searchManager.getAllAppsResults(MAX_SEARCH_RESULTS)
+                onSearchResults(all)
             } catch (e: Exception) {
                 Log.e(TAG, "Error initializing SearchManager", e)
                 // Handle initialization error gracefully
@@ -375,8 +416,9 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
         searchJob?.cancel()
         
         if (query.isEmpty()) {
-            // Clear results immediately when query is empty
-            searchResultsAdapter.clearResults()
+            // Show all apps when empty
+            val all = searchManager.getAllAppsResults(MAX_SEARCH_RESULTS)
+            onSearchResults(all)
             lastSearchQuery = ""
             return
         }
