@@ -80,3 +80,18 @@ This feature involves creating a minimal Android launcher that focuses on simpli
 3. WHEN opening settings from long press THEN the system SHALL transition smoothly between the home screen and settings page
 4. WHEN I finish configuring settings THEN the system SHALL return me to the updated home screen with my new favorites displayed
 
+### Requirement 8
+
+**User Story:** As a user, I want to access a full-screen app search interface by swiping up from the home screen, so that I can quickly find and launch any installed app using fuzzy search.
+
+#### Acceptance Criteria
+
+1. WHEN I swipe up from the home screen THEN the system SHALL display a full-screen black search interface
+2. WHEN the search interface opens THEN the system SHALL display a search input field at the top of the screen
+3. WHEN the search interface opens THEN the system SHALL automatically show the keyboard for immediate text input
+4. WHEN I type in the search field THEN the system SHALL perform fuzzy search across all installed app names
+5. WHEN search results are available THEN the system SHALL display matching apps in a list below the search field
+6. WHEN displaying search results THEN the system SHALL maintain the minimal text-based design without icons
+7. WHEN I tap on a search result THEN the system SHALL launch the selected app and close the search interface
+8. WHEN I swipe down or press back THEN the system SHALL close the search interface and return to the home screen
+

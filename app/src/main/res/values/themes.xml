@@ -53,4 +53,42 @@
         <item name="android:lineSpacingExtra">@dimen/material_expressive_spacing_small</item>
     </style>
 
+    <!-- Search Theme for full-screen black search interface -->
+    <style name="SearchTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Material Expressive color system for search interface -->
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSurface">@android:color/black</item>
+        <item name="colorOnSurface">@android:color/white</item>
+        
+        <!-- Material Expressive typography system for search -->
+        <item name="textAppearanceBodyLarge">@style/SearchTextAppearance</item>
+        <item name="textAppearanceBodyMedium">@style/SearchTextAppearance</item>
+        
+        <!-- Full-screen black background configuration -->
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        
+        <!-- Black system bars for immersive search -->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- Material Expressive elevation disabled for minimal search design -->
+        <item name="elevationOverlayEnabled">false</item>
+    </style>
+
+    <!-- Material Expressive typography for search interface -->
+    <style name="SearchTextAppearance" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
 </resources>

@@ -7,13 +7,16 @@ The minimal launcher UI will be implemented as an Android application that regis
 ## Architecture
 
 ### Application Structure
-- **MainActivity**: Primary launcher activity that handles home screen display and long press gestures
+- **MainActivity**: Primary launcher activity that handles home screen display, long press gestures, and swipe up search
+- **SearchActivity**: Full-screen search interface with fuzzy app search functionality
 - **SettingsActivity**: Configuration page for managing favorite apps
 - **LauncherTheme**: Custom theme system for minimal styling
 - **AppListView**: Custom view component for displaying configurable favorite apps (1-7)
+- **SearchView**: Custom search interface with fuzzy search capabilities
 - **WallpaperManager**: Handles background transparency and wallpaper integration
 - **FavoritesManager**: Manages favorite app storage, retrieval, and persistence
 - **AppRepository**: Handles installed app discovery and metadata retrieval
+- **SearchManager**: Handles fuzzy search logic and app filtering
 
 ### Android Launcher Integration
 The app will register as a launcher through AndroidManifest.xml configuration with:
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     // Manages configurable app list display
     // Implements wallpaper transparency
     // Handles long press gestures for settings access
+    // Detects swipe up gestures for search interface
 }
 ```
 
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 - Manage wallpaper background integration
 - Coordinate with AppListView for dynamic app display
 - Detect long press gestures and navigate to settings
+- Detect swipe up gestures and launch search interface
 - Load and display user-configured favorite apps
 
 ### AppListView
@@ -91,19 +96,54 @@ class FavoritesManager {
 - Handle app uninstallation scenarios (remove from favorites)
 - Persist favorites across app restarts
 
+### SearchActivity
+```kotlin
+class SearchActivity : AppCompatActivity() {
+    // Full-screen search interface
+    // Handles fuzzy search input and results display
+    // Manages keyboard visibility and search interactions
+}
+```
+
+**Responsibilities:**
+- Display full-screen black search interface
+- Show search input field at top of screen
+- Automatically display keyboard on interface open
+- Handle search input and trigger fuzzy search
+- Display search results in minimal text format
+- Handle app selection and launch from search results
+- Manage swipe down/back gestures to close search
+
+### SearchManager
+```kotlin
+class SearchManager {
+    // Handles fuzzy search logic and app filtering
+    // Provides real-time search results
+    // Manages search performance optimization
+}
+```
+
+**Responsibilities:**
+- Perform fuzzy search across all installed app names
+- Filter and rank search results by relevance
+- Provide real-time search suggestions as user types
+- Cache search results for performance optimization
+- Handle special characters and multilingual app names
+
 ### AppRepository
 ```kotlin
 class AppRepository {
     // Handles installed app discovery and metadata
-    // Provides app information for settings page
+    // Provides app information for settings page and search
 }
 ```
 
 **Responsibilities:**
 - Query all installed apps from PackageManager
-- Filter launchable apps for settings display
+- Filter launchable apps for settings display and search
 - Provide app metadata (name, package name, icon)
 - Handle app installation/uninstallation events
+- Maintain cached app list for search performance
 
 ### LauncherTheme
 **Responsibilities:**
@@ -193,6 +233,19 @@ SettingsActivity (Full Screen)
 └── NavigationBar (Transparent)
 ```
 
+#### Search Interface (SearchActivity)
+```
+SearchActivity (Full Screen Black)
+├── StatusBar (Black)
+├── SearchInputField (Top, Focused)
+│   └── Keyboard (Auto-displayed)
+├── SearchResults (ScrollView)
+│   ├── MatchingApp1 (TextView)
+│   ├── MatchingApp2 (TextView)
+│   └── ... (Fuzzy search results)
+└── NavigationBar (Black)
+```
+
 ### Visual Design
 
 #### Home Screen
@@ -212,6 +265,17 @@ SettingsActivity (Full Screen)
 - **Layout**: Clean list-based interface with minimal dividers
 - **Selection**: Subtle highlight for selected favorites
 - **Buttons**: Text-based buttons maintaining minimal aesthetic
+
+#### Search Interface
+- **Background**: Solid black (#000000) full-screen overlay
+- **Search Field**: White text on black background at top of screen
+- **Text Color**: White (#FFFFFF) for maximum contrast on black
+- **Typography**: Same Roboto font family for consistency
+- **Text Size**: 18sp for search input, 16sp for results
+- **Layout**: Vertical list of search results below input field
+- **Keyboard**: Automatically displayed when interface opens
+- **Results**: Real-time filtering as user types
+- **Spacing**: 20dp between search results for easy touch targets
 
 ### Theme Configuration
 ```xml

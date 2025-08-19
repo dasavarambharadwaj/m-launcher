@@ -38,6 +38,12 @@ class AppRepository(private val context: Context) {
     }
     
     /**
+     * Get all installed apps for search functionality
+     * Alias for getAllLaunchableApps to maintain compatibility
+     */
+    suspend fun getInstalledApps(): List<InstalledApp> = getAllLaunchableApps()
+    
+    /**
      * Get all launchable installed apps
      */
     suspend fun getAllLaunchableApps(): List<InstalledApp> = withContext(Dispatchers.IO) {

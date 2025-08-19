@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
         private const val SETTINGS_REQUEST_CODE = 1001
+        private const val SEARCH_REQUEST_CODE = 1002
         private const val LONG_PRESS_DURATION_MS = 500L
     }
     
@@ -163,7 +164,7 @@ class MainActivity : AppCompatActivity() {
     }
     
     /**
-     * Set up long press gesture detection for settings access
+     * Set up gesture detection for settings access and search interface
      */
     private fun setupLongPressGesture() {
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
@@ -177,6 +178,36 @@ class MainActivity : AppCompatActivity() {
                 openSettings()
             }
             
+            override fun onFling(
+                e1: MotionEvent?,
+                e2: MotionEvent,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
+                if (e1 == null) return false
+                
+                val deltaY = e2.y - e1.y
+                val deltaX = e2.x - e1.x
+                
+                // Check for swipe up gesture
+                if (Math.abs(deltaY) > Math.abs(deltaX) && 
+                    deltaY < -100 && // Minimum swipe distance (upward)
+                    Math.abs(velocityY) > 500) { // Minimum velocity threshold
+                    
+                    Log.d(TAG, "Swipe up detected, opening search")
+                    
+                    // Provide haptic feedback for swipe gesture
+                    performHapticFeedback()
+                    
+                    // Launch search interface
+                    openSearch()
+                    
+                    return true
+                }
+                
+                return false
+            }
+            
             override fun onDown(e: MotionEvent): Boolean {
                 // Return true to indicate we want to handle gestures
                 return true
@@ -188,7 +219,7 @@ class MainActivity : AppCompatActivity() {
             gestureDetector.onTouchEvent(event)
         }
         
-        Log.d(TAG, "Long press gesture detection configured")
+        Log.d(TAG, "Gesture detection configured (long press and swipe up)")
     }
     
     /**
@@ -284,16 +315,46 @@ class MainActivity : AppCompatActivity() {
     }
     
     /**
-     * Handle result from settings activity
+     * Open search interface with Material Expressive animations
+     */
+    private fun openSearch() {
+        try {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivityForResult(intent, SEARCH_REQUEST_CODE)
+            
+            // Apply Material Expressive transition animation for search interface
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            
+            Log.d(TAG, "Search activity launched with Material Expressive transitions")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error launching search activity", e)
+            ErrorHandler.handleSearchNavigationError(this, e)
+        }
+    }
+    
+    /**
+     * Handle result from settings and search activities
      */
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         
-        if (requestCode == SETTINGS_REQUEST_CODE) {
-            Log.d(TAG, "Returned from settings, refreshing favorites")
-            // Refresh favorites when returning from settings
-            loadFavoriteApps()
+        when (requestCode) {
+            SETTINGS_REQUEST_CODE -> {
+                Log.d(TAG, "Returned from settings, refreshing favorites")
+                // Refresh favorites when returning from settings
+                loadFavoriteApps()
+            }
+            SEARCH_REQUEST_CODE -> {
+                Log.d(TAG, "Returned from search interface")
+                // Ensure home screen is properly restored after search
+                setupFullScreenImmersiveMode()
+                
+                // Update text contrast in case wallpaper changed while in search
+                if (::wallpaperContrastManager.isInitialized) {
+                    wallpaperContrastManager.forceUpdate()
+                }
+            }
         }
     }
     

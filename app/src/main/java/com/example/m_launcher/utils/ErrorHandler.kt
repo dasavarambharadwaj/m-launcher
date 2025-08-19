@@ -46,6 +46,14 @@ object ErrorHandler {
     }
     
     /**
+     * Handle search navigation errors
+     */
+    fun handleSearchNavigationError(context: Context, error: Throwable) {
+        Log.e(TAG, "Failed to open search interface", error)
+        showUserMessage(context, "Could not open search")
+    }
+    
+    /**
      * Handle app repository errors
      */
     fun handleAppRepositoryError(context: Context, error: Throwable) {
