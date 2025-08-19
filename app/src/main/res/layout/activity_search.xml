@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#000000"
-    android:padding="24dp"
+    android:padding="12dp"
     android:fitsSystemWindows="false">
 
     <!-- Search Input Field at Top -->

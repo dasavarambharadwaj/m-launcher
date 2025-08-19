@@ -40,8 +40,13 @@ class SearchResultsAdapter(
         // Display app name in white text without icons maintaining minimal design
         holder.appNameText.text = app.displayName
         holder.appNameText.setTextColor(android.graphics.Color.WHITE)
-        // Hide icon by default for minimal design
-        holder.appIcon.visibility = View.GONE
+        // If this is the Google prompt, show the Google icon; else keep minimal without icon
+        if (app.packageName.isBlank() && app.displayName.startsWith("Search Google")) {
+            holder.appIcon.visibility = View.VISIBLE
+            holder.appIcon.setImageResource(R.drawable.ic_google)
+        } else {
+            holder.appIcon.visibility = View.GONE
+        }
 
         // Apply font size from settings for search results
         try {
@@ -58,19 +63,66 @@ class SearchResultsAdapter(
             onAppClick(searchResult)
         }
         
-        // Add subtle visual feedback for touch
-        holder.itemView.setOnTouchListener { view, event ->
-            when (event.action) {
-                android.view.MotionEvent.ACTION_DOWN -> {
-                    view.alpha = 0.7f
+        // Long-press for options: App info / Uninstall (if applicable), or Google search
+        holder.itemView.setOnLongClickListener {
+            try {
+                if (app.packageName.isBlank() || !app.isLaunchable) {
+                    // Google prompt row → open web search
+                    val context = holder.itemView.context
+                    val label = holder.appNameText.text.toString()
+                    val query = label.substringAfter("\"").substringBeforeLast("\"")
+                    val uri = android.net.Uri.parse("https://www.google.com/search?q=" + java.net.URLEncoder.encode(query, "UTF-8"))
+                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
+                    context.startActivity(intent)
+                } else {
+                    showAppContextMenu(holder.itemView, app)
                 }
-                android.view.MotionEvent.ACTION_UP,
-                android.view.MotionEvent.ACTION_CANCEL -> {
-                    view.alpha = 1.0f
-                }
-            }
-            false
+            } catch (_: Exception) { }
+            true
         }
+    }
+
+    private fun showAppContextMenu(anchor: View, app: com.example.m_launcher.data.InstalledApp) {
+        val context = anchor.context
+        val options = mutableListOf("App info")
+        val canUninstall = !isSystemApp(context, app.packageName)
+        if (canUninstall) options.add("Uninstall")
+
+        val builder = android.app.AlertDialog.Builder(context, R.style.DarkAlertDialog)
+            .setTitle(app.displayName)
+            .setItems(options.toTypedArray()) { dialog, which ->
+                when (options[which]) {
+                    "App info" -> openAppInfo(context, app.packageName)
+                    "Uninstall" -> requestUninstall(context, app.packageName)
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+        builder.show()
+    }
+
+    private fun openAppInfo(context: android.content.Context, packageName: String) {
+        try {
+            val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            intent.data = android.net.Uri.fromParts("package", packageName, null)
+            context.startActivity(intent)
+        } catch (_: Exception) { }
+    }
+
+    private fun requestUninstall(context: android.content.Context, packageName: String) {
+        try {
+            val intent = android.content.Intent(android.content.Intent.ACTION_DELETE)
+            intent.data = android.net.Uri.parse("package:$packageName")
+            context.startActivity(intent)
+        } catch (_: Exception) { }
+    }
+
+    private fun isSystemApp(context: android.content.Context, packageName: String): Boolean {
+        return try {
+            val pm = context.packageManager
+            val appInfo = pm.getApplicationInfo(packageName, 0)
+            (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
+        } catch (_: Exception) { false }
     }
     
     override fun getItemCount(): Int = searchResults.size
