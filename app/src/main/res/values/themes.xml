@@ -45,12 +45,12 @@
 
     <!-- Material Expressive typography for launcher text -->
     <style name="LauncherTextAppearance" parent="TextAppearance.Material3.BodyLarge">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/material_expressive_text_size_body</item>
         <item name="android:textColor">@color/launcher_text_dynamic</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
         <item name="android:letterSpacing">0.01</item>
-        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:lineSpacingExtra">@dimen/material_expressive_spacing_small</item>
     </style>
 
 </resources>

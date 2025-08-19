@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material Expressive dimensions for tablets (600dp+) -->
+    <!-- Expanded spacing for larger screens -->
+    <dimen name="material_expressive_spacing_small">12dp</dimen>
+    <dimen name="material_expressive_spacing_medium">20dp</dimen>
+    <dimen name="material_expressive_spacing_large">32dp</dimen>
+    <dimen name="material_expressive_spacing_extra_large">48dp</dimen>
+    
+    <!-- Expanded padding for larger screens -->
+    <dimen name="material_expressive_padding_small">12dp</dimen>
+    <dimen name="material_expressive_padding_medium">20dp</dimen>
+    <dimen name="material_expressive_padding_large">32dp</dimen>
+    <dimen name="material_expressive_padding_extra_large">48dp</dimen>
+    
+    <!-- Larger text sizing for tablets -->
+    <dimen name="material_expressive_text_size_body">22sp</dimen>
+    <dimen name="material_expressive_text_size_title">28sp</dimen>
+    
+    <!-- Material Expressive touch targets for tablets -->
+    <dimen name="material_expressive_touch_target_min">56dp</dimen>
+    
+    <!-- Material Expressive minimum widths for app list -->
+    <dimen name="material_expressive_app_list_min_width">140dp</dimen>
+</resources>

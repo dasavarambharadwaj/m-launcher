@@ -20,35 +20,35 @@
   - Implement basic activity lifecycle for launcher behavior with Android 16 optimizations
   - _Requirements: 1.1, 1.2, 1.3, 4.1, 4.2_
 
-- [ ] 4. Create AppListView custom component with Material Expressive
+- [x] 4. Create AppListView custom component with Material Expressive
   - Implement AppListView as LinearLayout subclass using Material Expressive components
   - Add three Material Expressive TextView elements for "Phone", "Messages", and "Browser"
   - Configure center alignment and proper spacing using Material Expressive spacing guidelines
   - Apply Material Expressive typography system with minimal styling for clean appearance
   - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.3_
 
-- [ ] 5. Implement dynamic text contrast system
+- [x] 5. Implement dynamic text contrast system
   - Create text color calculation logic based on wallpaper luminance
   - Implement wallpaper sampling to determine optimal text color (white/black)
   - Add wallpaper change listener to update text color dynamically
   - Ensure text remains readable against various wallpaper backgrounds
   - _Requirements: 4.3, 3.1_
 
-- [ ] 6. Integrate AppListView into MainActivity layout
+- [x] 6. Integrate AppListView into MainActivity layout
   - Create main activity layout XML with AppListView as root element
   - Configure layout to center the app list vertically and horizontally on screen
   - Set up proper layout parameters for different screen sizes and orientations
   - Test layout rendering with transparent background and wallpaper visibility
   - _Requirements: 2.3, 4.1, 4.2_
 
-- [ ] 7. Add launcher metadata and permissions
+- [x] 7. Add launcher metadata and permissions
   - Configure launcher metadata in AndroidManifest.xml for proper system recognition
   - Add any required permissions for launcher functionality
   - Set appropriate application icon and label for launcher selection screen
   - Ensure app appears correctly in Android's default app settings
   - _Requirements: 1.1, 1.2_
 
-- [ ] 8. Implement responsive layout with Material Expressive for Android 16
+- [x] 8. Implement responsive layout with Material Expressive for Android 16
   - Add Material Expressive layout variants for different screen densities and sizes
   - Configure Material Expressive text scaling and spacing system for phones and tablets
   - Test layout adaptation using Material Expressive responsive design for portrait and landscape

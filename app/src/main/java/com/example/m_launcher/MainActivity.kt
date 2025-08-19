@@ -11,11 +11,17 @@ import androidx.core.view.WindowInsetsControllerCompat
 
 class MainActivity : AppCompatActivity() {
     
+    private lateinit var wallpaperContrastManager: WallpaperContrastManager
+    private lateinit var appListView: AppListView
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         // Set the main launcher layout
         setContentView(R.layout.activity_main)
+        
+        // Initialize AppListView reference
+        appListView = findViewById(R.id.app_list_view)
         
         // Apply Material Expressive LauncherTheme and configure launcher window
         setupMaterialExpressiveLauncher()
@@ -26,14 +32,19 @@ class MainActivity : AppCompatActivity() {
         // Set up transparent window background to show device wallpaper
         setupWallpaperTransparency()
         
-        // Basic launcher activity setup - content will be added in later tasks
-        // For now, we just set up the activity structure
+        // Initialize dynamic text contrast system
+        setupDynamicTextContrast()
     }
     
     override fun onResume() {
         super.onResume()
         // Ensure launcher behavior is maintained when returning to home screen
         setupFullScreenImmersiveMode()
+        
+        // Update text contrast when returning to launcher
+        if (::wallpaperContrastManager.isInitialized) {
+            wallpaperContrastManager.forceUpdate()
+        }
     }
     
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -97,6 +108,19 @@ class MainActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,
             WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
         )
+    }
+    
+    /**
+     * Initialize dynamic text contrast system based on wallpaper luminance
+     */
+    private fun setupDynamicTextContrast() {
+        wallpaperContrastManager = WallpaperContrastManager(this) { textColor ->
+            // Update AppListView text color when wallpaper changes
+            appListView.updateTextColor(textColor)
+        }
+        
+        // Register lifecycle observer to manage wallpaper change listener
+        lifecycle.addObserver(wallpaperContrastManager)
     }
     
     @Deprecated("Deprecated in Java")

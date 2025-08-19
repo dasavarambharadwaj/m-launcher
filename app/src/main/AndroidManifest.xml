@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions for launcher functionality -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -19,19 +23,25 @@
             android:stateNotNeeded="true"
             android:clearTaskOnLaunch="true"
             android:finishOnTaskLaunch="false"
-            android:theme="@style/LauncherTheme">
+            android:theme="@style/LauncherTheme"
+            android:label="@string/launcher_name">
             <!-- Default app launcher intent filter -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             
-            <!-- Home launcher intent filter -->
+            <!-- Home launcher intent filter with launcher metadata -->
             <intent-filter android:priority="1">
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            
+            <!-- Launcher metadata for proper system recognition -->
+            <meta-data
+                android:name="android.app.home.alternate"
+                android:value="true" />
         </activity>
 
     </application>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material Expressive dimensions for foldables and very large tablets (840dp+) -->
+    <!-- Extra large spacing for foldable devices -->
+    <dimen name="material_expressive_spacing_small">20dp</dimen>
+    <dimen name="material_expressive_spacing_medium">28dp</dimen>
+    <dimen name="material_expressive_spacing_large">48dp</dimen>
+    <dimen name="material_expressive_spacing_extra_large">64dp</dimen>
+    
+    <!-- Extra large padding for foldable devices -->
+    <dimen name="material_expressive_padding_small">20dp</dimen>
+    <dimen name="material_expressive_padding_medium">28dp</dimen>
+    <dimen name="material_expressive_padding_large">48dp</dimen>
+    <dimen name="material_expressive_padding_extra_large">64dp</dimen>
+    
+    <!-- Extra large text sizing for foldables -->
+    <dimen name="material_expressive_text_size_body">26sp</dimen>
+    <dimen name="material_expressive_text_size_title">36sp</dimen>
+    
+    <!-- Material Expressive touch targets for foldables -->
+    <dimen name="material_expressive_touch_target_min">72dp</dimen>
+    
+    <!-- Material Expressive minimum widths for app list -->
+    <dimen name="material_expressive_app_list_min_width">180dp</dimen>
+</resources>

@@ -5,13 +5,16 @@
     android:background="@android:color/transparent"
     android:fitsSystemWindows="false">
 
-    <!-- AppListView component with Material Expressive design -->
+    <!-- AppListView component optimized for standard phones in landscape (360dp+) -->
     <com.example.m_launcher.AppListView
         android:id="@+id/app_list_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/material_expressive_padding_medium"
-        android:minWidth="@dimen/material_expressive_app_list_min_width" />
-
+        android:minWidth="@dimen/material_expressive_app_list_min_width"
+        android:layout_marginStart="@dimen/material_expressive_padding_large"
+        android:layout_marginEnd="@dimen/material_expressive_padding_large"
+        android:layout_marginTop="@dimen/material_expressive_padding_small"
+        android:layout_marginBottom="@dimen/material_expressive_padding_small" />
+    
 </FrameLayout>

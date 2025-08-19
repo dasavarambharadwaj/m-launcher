@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material Expressive spacing guidelines for minimal launcher -->
+    <dimen name="material_expressive_spacing_small">8dp</dimen>
+    <dimen name="material_expressive_spacing_medium">16dp</dimen>
+    <dimen name="material_expressive_spacing_large">24dp</dimen>
+    <dimen name="material_expressive_spacing_extra_large">32dp</dimen>
+    
+    <!-- Material Expressive padding guidelines -->
+    <dimen name="material_expressive_padding_small">8dp</dimen>
+    <dimen name="material_expressive_padding_medium">16dp</dimen>
+    <dimen name="material_expressive_padding_large">24dp</dimen>
+    <dimen name="material_expressive_padding_extra_large">32dp</dimen>
+    
+    <!-- Material Expressive text sizing -->
+    <dimen name="material_expressive_text_size_body">18sp</dimen>
+    <dimen name="material_expressive_text_size_title">24sp</dimen>
+    
+    <!-- Material Expressive touch targets -->
+    <dimen name="material_expressive_touch_target_min">48dp</dimen>
+    
+    <!-- Material Expressive minimum widths for app list -->
+    <dimen name="material_expressive_app_list_min_width">120dp</dimen>
+</resources>

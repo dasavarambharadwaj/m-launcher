@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material Expressive dimensions for small phones (320dp+) -->
+    <!-- Compact spacing for smaller screens -->
+    <dimen name="material_expressive_spacing_small">6dp</dimen>
+    <dimen name="material_expressive_spacing_medium">12dp</dimen>
+    <dimen name="material_expressive_spacing_large">18dp</dimen>
+    <dimen name="material_expressive_spacing_extra_large">24dp</dimen>
+    
+    <!-- Compact padding for smaller screens -->
+    <dimen name="material_expressive_padding_small">6dp</dimen>
+    <dimen name="material_expressive_padding_medium">12dp</dimen>
+    <dimen name="material_expressive_padding_large">18dp</dimen>
+    <dimen name="material_expressive_padding_extra_large">24dp</dimen>
+    
+    <!-- Smaller text sizing for compact displays -->
+    <dimen name="material_expressive_text_size_body">16sp</dimen>
+    <dimen name="material_expressive_text_size_title">20sp</dimen>
+    
+    <!-- Material Expressive touch targets -->
+    <dimen name="material_expressive_touch_target_min">44dp</dimen>
+    
+    <!-- Material Expressive minimum widths for app list -->
+    <dimen name="material_expressive_app_list_min_width">100dp</dimen>
+</resources>
