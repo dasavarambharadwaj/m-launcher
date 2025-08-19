@@ -6,14 +6,14 @@
   - Configure activity launch mode and state management for launcher behavior
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 2. Create minimal launcher theme using Material Expressive
+- [x] 2. Create minimal launcher theme using Material Expressive
   - Define LauncherTheme in themes.xml extending Material Expressive theme for Android 16
   - Configure Material Expressive components with transparent background and no action bar
   - Set up Material Expressive color system and typography for minimal launcher design
   - Configure window flags for full-screen transparent display with Material Expressive styling
   - _Requirements: 3.1, 3.2, 3.3, 4.1, 4.2_
 
-- [ ] 3. Implement MainActivity launcher activity with Material Expressive
+- [x] 3. Implement MainActivity launcher activity with Material Expressive
   - Create MainActivity class extending AppCompatActivity with Material Expressive support
   - Apply Material Expressive LauncherTheme and configure full-screen immersive mode
   - Set up transparent window background using Material Expressive theming to show device wallpaper
