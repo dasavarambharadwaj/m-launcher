@@ -7,16 +7,19 @@ The minimal launcher UI will be implemented as an Android application that regis
 ## Architecture
 
 ### Application Structure
-- **MainActivity**: Primary launcher activity that handles home screen display, long press gestures, and swipe up search
-- **SearchActivity**: Full-screen search interface with fuzzy app search functionality
-- **SettingsActivity**: Configuration page for managing favorite apps
+- **MainActivity**: Primary launcher activity that handles home screen display, gesture detection, and advanced configurations
+- **SearchActivity**: Full-screen search interface with fuzzy app search functionality and configurable font sizes
+- **SettingsActivity**: Enhanced tabbed configuration interface for all launcher settings
 - **LauncherTheme**: Custom theme system for minimal styling
-- **AppListView**: Custom view component for displaying configurable favorite apps (1-7)
+- **AppListView**: Custom view component with configurable positioning and font sizes
 - **SearchView**: Custom search interface with fuzzy search capabilities
 - **WallpaperManager**: Handles background transparency and wallpaper integration
 - **FavoritesManager**: Manages favorite app storage, retrieval, and persistence
 - **AppRepository**: Handles installed app discovery and metadata retrieval
 - **SearchManager**: Handles fuzzy search logic and app filtering
+- **GestureManager**: Handles left/right swipe gestures and app launching
+- **LayoutManager**: Manages favorites positioning and font size configurations
+- **SettingsManager**: Centralized settings storage and retrieval system
 
 ### Android Launcher Integration
 The app will register as a launcher through AndroidManifest.xml configuration with:
@@ -29,23 +32,25 @@ The app will register as a launcher through AndroidManifest.xml configuration wi
 ### MainActivity
 ```kotlin
 class MainActivity : AppCompatActivity() {
-    // Primary launcher activity
+    // Primary launcher activity with advanced gesture support
     // Handles system home button presses
-    // Manages configurable app list display
+    // Manages configurable app list display with custom positioning
     // Implements wallpaper transparency
-    // Handles long press gestures for settings access
-    // Detects swipe up gestures for search interface
+    // Handles multiple gesture types (long press, swipe up, left/right swipes)
+    // Applies dynamic font sizing and layout configurations
 }
 ```
 
 **Responsibilities:**
-- Display the home screen UI with configurable favorites
-- Handle launcher lifecycle events
-- Manage wallpaper background integration
-- Coordinate with AppListView for dynamic app display
-- Detect long press gestures and navigate to settings
+- Display the home screen UI with configurable favorites in custom positions
+- Handle launcher lifecycle events and configuration changes
+- Manage wallpaper background integration with dynamic text contrast
+- Coordinate with AppListView for dynamic app display with custom font sizes
+- Detect long press gestures and navigate to enhanced settings
 - Detect swipe up gestures and launch search interface
-- Load and display user-configured favorite apps
+- Handle left/right swipe gestures to launch configured apps
+- Load and apply all user configurations (favorites, layout, gestures, typography)
+- Provide real-time configuration updates without app restart
 
 ### AppListView
 ```kotlin
@@ -67,18 +72,73 @@ class AppListView : LinearLayout {
 ### SettingsActivity
 ```kotlin
 class SettingsActivity : AppCompatActivity() {
-    // Configuration page for managing favorite apps
-    // Displays installed apps for selection
-    // Handles favorite app persistence
+    // Enhanced tabbed configuration interface
+    // Manages all launcher settings in organized sections
+    // Provides real-time preview and immediate application of changes
 }
 ```
 
 **Responsibilities:**
-- Display all installed apps in a selectable list
-- Allow users to select/deselect up to 7 favorite apps
-- Provide reordering functionality for selected favorites
-- Save favorite configurations to persistent storage
-- Maintain minimal design aesthetic consistent with launcher
+- Display tabbed interface with Favorites, Gestures, and Layout sections
+- Allow users to select/deselect up to 7 favorite apps in Favorites tab
+- Provide left/right swipe app configuration in Gestures tab
+- Offer favorites positioning and font size controls in Layout tab
+- Save all configurations to persistent storage
+- Apply settings immediately upon save action
+- Return to home screen with updated configurations
+- Maintain minimal design aesthetic with enhanced usability
+
+### GestureManager
+```kotlin
+class GestureManager {
+    // Handles advanced gesture detection and app launching
+    // Manages left/right swipe gesture configurations
+    // Provides gesture conflict resolution
+}
+```
+
+**Responsibilities:**
+- Detect left and right swipe gestures on home screen
+- Launch configured apps for each swipe direction
+- Handle gesture conflicts between different swipe types
+- Provide haptic feedback for gesture recognition
+- Store and retrieve swipe app configurations
+- Validate configured apps are still installed
+
+### LayoutManager
+```kotlin
+class LayoutManager {
+    // Manages favorites positioning and typography configurations
+    // Handles dynamic layout updates and font size changes
+    // Ensures accessibility and readability across all configurations
+}
+```
+
+**Responsibilities:**
+- Apply horizontal positioning (left, center, right) for favorites list
+- Apply vertical positioning (top, center, bottom) for favorites list
+- Manage font size configurations for all text elements
+- Ensure proper spacing and proportions with different font sizes
+- Maintain text readability against various wallpaper backgrounds
+- Provide real-time layout preview in settings
+- Validate layout configurations for accessibility compliance
+
+### SettingsManager
+```kotlin
+class SettingsManager {
+    // Centralized settings storage and retrieval system
+    // Manages all launcher configurations with atomic updates
+    // Provides settings change notifications and validation
+}
+```
+
+**Responsibilities:**
+- Store and retrieve all launcher settings (favorites, gestures, layout, typography)
+- Provide atomic updates for multiple setting changes
+- Validate setting combinations for compatibility and usability
+- Notify components of setting changes for real-time updates
+- Handle settings migration and default value management
+- Ensure data integrity and backup/restore capabilities
 
 ### FavoritesManager
 ```kotlin
@@ -196,11 +256,77 @@ data class LauncherConfig(
     val textSize: Float,
     val textColor: Int,
     val backgroundColor: Int,
-    val spacing: Int
+    val spacing: Int,
+    val horizontalPosition: HorizontalPosition,
+    val verticalPosition: VerticalPosition
 )
 ```
 
 **Purpose:** Configuration object for UI styling and layout parameters
+
+### GestureConfig
+```kotlin
+data class GestureConfig(
+    val leftSwipeApp: String? = null,
+    val rightSwipeApp: String? = null,
+    val leftSwipeAppName: String? = null,
+    val rightSwipeAppName: String? = null
+)
+```
+
+**Purpose:** Configuration for left and right swipe gesture app assignments
+
+### LayoutConfig
+```kotlin
+data class LayoutConfig(
+    val horizontalPosition: HorizontalPosition = HorizontalPosition.CENTER,
+    val verticalPosition: VerticalPosition = VerticalPosition.CENTER,
+    val fontSize: FontSize = FontSize.MEDIUM
+)
+```
+
+**Purpose:** Configuration for favorites positioning and typography settings
+
+### FontSize
+```kotlin
+enum class FontSize(val spValue: Float, val displayName: String) {
+    SMALL(14f, "Small"),
+    MEDIUM(18f, "Medium"),
+    LARGE(22f, "Large"),
+    EXTRA_LARGE(26f, "Extra Large")
+}
+```
+
+**Purpose:** Enumeration of available font size options
+
+### HorizontalPosition
+```kotlin
+enum class HorizontalPosition {
+    LEFT, CENTER, RIGHT
+}
+```
+
+**Purpose:** Enumeration of horizontal positioning options for favorites list
+
+### VerticalPosition
+```kotlin
+enum class VerticalPosition {
+    TOP, CENTER, BOTTOM
+}
+```
+
+**Purpose:** Enumeration of vertical positioning options for favorites list
+
+### AdvancedSettings
+```kotlin
+data class AdvancedSettings(
+    val favorites: List<FavoriteApp> = emptyList(),
+    val gestureConfig: GestureConfig = GestureConfig(),
+    val layoutConfig: LayoutConfig = LayoutConfig()
+)
+```
+
+**Purpose:** Comprehensive settings container for all launcher configurations
 
 ## UI Design Specifications
 
@@ -218,18 +344,34 @@ MainActivity (Full Screen)
 └── NavigationBar (Transparent)
 ```
 
-#### Settings Page (SettingsActivity)
+#### Enhanced Settings Page (SettingsActivity)
 ```
 SettingsActivity (Full Screen)
 ├── StatusBar (Transparent)
 ├── ToolBar (Minimal)
-│   └── "Favorites Settings" (Title)
-├── ScrollView
-│   ├── "Selected Favorites" (Section)
-│   │   └── RecyclerView (Selected Apps, Reorderable)
-│   ├── "Available Apps" (Section)
-│   │   └── RecyclerView (All Installed Apps, Selectable)
-│   └── Save Button (Minimal)
+│   └── "Launcher Settings" (Title)
+├── TabLayout (Material Expressive)
+│   ├── "Favorites" (Tab)
+│   ├── "Gestures" (Tab)
+│   └── "Layout" (Tab)
+├── ViewPager2 (Tab Content)
+│   ├── FavoritesFragment
+│   │   ├── "Selected Favorites" (Section)
+│   │   │   └── RecyclerView (Selected Apps, Reorderable)
+│   │   └── "Available Apps" (Section)
+│   │       └── RecyclerView (All Installed Apps, Selectable)
+│   ├── GesturesFragment
+│   │   ├── "Left Swipe App" (Section)
+│   │   │   └── AppSelector (Single App Selection)
+│   │   └── "Right Swipe App" (Section)
+│   │       └── AppSelector (Single App Selection)
+│   └── LayoutFragment
+│       ├── "Favorites Position" (Section)
+│       │   ├── HorizontalPositionSelector (Left/Center/Right)
+│       │   └── VerticalPositionSelector (Top/Center/Bottom)
+│       └── "Font Size" (Section)
+│           └── FontSizeSelector (Small/Medium/Large/Extra Large)
+├── Save Button (Fixed Bottom, Material Expressive)
 └── NavigationBar (Transparent)
 ```
 

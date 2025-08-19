@@ -95,3 +95,56 @@ This feature involves creating a minimal Android launcher that focuses on simpli
 7. WHEN I tap on a search result THEN the system SHALL launch the selected app and close the search interface
 8. WHEN I swipe down or press back THEN the system SHALL close the search interface and return to the home screen
 
+### Requirement 9
+
+**User Story:** As a user, I want to configure apps that launch when I swipe left or right on the home screen, so that I can quickly access my most important applications with simple gestures.
+
+#### Acceptance Criteria
+
+1. WHEN I access advanced settings THEN the system SHALL allow me to select one app for left swipe gesture
+2. WHEN I access advanced settings THEN the system SHALL allow me to select one app for right swipe gesture
+3. WHEN I swipe left on the home screen THEN the system SHALL launch the configured left swipe app
+4. WHEN I swipe right on the home screen THEN the system SHALL launch the configured right swipe app
+5. WHEN no app is configured for a swipe direction THEN the system SHALL ignore that gesture
+6. WHEN I change swipe app settings THEN the system SHALL apply changes immediately upon saving
+
+### Requirement 10
+
+**User Story:** As a user, I want to customize the position of my favorite apps list on the home screen, so that I can place them exactly where I prefer for optimal usability.
+
+#### Acceptance Criteria
+
+1. WHEN I access layout settings THEN the system SHALL provide horizontal positioning options for the favorites list
+2. WHEN I access layout settings THEN the system SHALL provide vertical positioning options for the favorites list
+3. WHEN I adjust horizontal position THEN the system SHALL move the favorites list left, center, or right on the screen
+4. WHEN I adjust vertical position THEN the system SHALL move the favorites list up, center, or down on the screen
+5. WHEN I save position settings THEN the system SHALL immediately apply the new layout to the home screen
+6. WHEN displaying favorites in custom positions THEN the system SHALL maintain text readability and touch accessibility
+
+### Requirement 11
+
+**User Story:** As a user, I want to configure the font size for both home screen app text and search interface text, so that I can optimize readability for my preferences and device.
+
+#### Acceptance Criteria
+
+1. WHEN I access typography settings THEN the system SHALL provide font size options ranging from small to extra large
+2. WHEN I change font size THEN the system SHALL apply the same size to both home screen favorites and search interface text
+3. WHEN I save font size settings THEN the system SHALL immediately update all text displays without requiring app restart
+4. WHEN using larger font sizes THEN the system SHALL maintain proper spacing and layout proportions
+5. WHEN using smaller font sizes THEN the system SHALL ensure text remains readable against wallpaper backgrounds
+6. WHEN font size changes THEN the system SHALL preserve the minimal design aesthetic
+
+### Requirement 12
+
+**User Story:** As a user, I want an enhanced settings interface with organized tabs and sections, so that I can easily navigate between different configuration options.
+
+#### Acceptance Criteria
+
+1. WHEN I open settings THEN the system SHALL display a tabbed interface with organized sections
+2. WHEN I access the Favorites tab THEN the system SHALL show favorite app selection and management options
+3. WHEN I access the Gestures tab THEN the system SHALL show left/right swipe app configuration options
+4. WHEN I access the Layout tab THEN the system SHALL show favorites positioning and font size options
+5. WHEN I make changes in any tab THEN the system SHALL provide a save button to apply all changes
+6. WHEN I click save THEN the system SHALL apply all settings immediately and return to the updated home screen
+7. WHEN settings are applied THEN the system SHALL provide visual feedback confirming the changes
+

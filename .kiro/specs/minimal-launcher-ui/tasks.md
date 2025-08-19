@@ -213,3 +213,125 @@
   - Verify keyboard display and dismissal behavior across different devices
   - Test search result accuracy and ranking with different query types
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8_
+
+- [ ] 29. Implement GestureManager for left/right swipe detection
+  - Create GestureManager class to handle advanced gesture detection
+  - Add left and right swipe gesture recognition using GestureDetector
+  - Implement swipe velocity and distance thresholds for reliable detection
+  - Add gesture conflict resolution between swipe gestures and existing gestures
+  - Provide haptic feedback for swipe gesture recognition
+  - _Requirements: 9.3, 9.4, 9.5_
+
+- [ ] 30. Create gesture configuration in settings
+  - Add GestureConfig data model for storing swipe app assignments
+  - Implement Gestures tab in settings with app selection for each direction
+  - Add persistence for swipe gesture configurations using SettingsManager
+  - Create UI for app selection in gesture settings using AppSelector component
+  - Handle uninstalled apps in gesture configurations
+  - _Requirements: 9.1, 9.2, 9.6_
+
+- [ ] 31. Implement LayoutManager for favorites positioning
+  - Create LayoutManager class to handle positioning configuration
+  - Add LayoutConfig data model with horizontal and vertical position enums
+  - Implement layout position calculations for different screen sizes
+  - Update AppListView to support dynamic positioning
+  - Ensure proper spacing and alignment in all positions
+  - _Requirements: 10.3, 10.4, 10.6_
+
+- [ ] 32. Add position configuration UI in settings
+  - Create Layout tab in settings interface
+  - Implement horizontal position selector (Left/Center/Right)
+  - Add vertical position selector (Top/Center/Bottom)
+  - Create visual preview of position changes
+  - Handle position configuration persistence
+  - _Requirements: 10.1, 10.2, 10.5_
+
+- [ ] 33. Implement font size configuration system
+  - Add FontSize enum with size variants (Small to Extra Large)
+  - Create typography configuration system with Material Expressive
+  - Update AppListView to support dynamic font sizing
+  - Implement font size scaling with proper spacing adjustments
+  - Ensure readability across all font sizes and wallpapers
+  - _Requirements: 11.1, 11.4, 11.5, 11.6_
+
+- [ ] 34. Extend settings UI with font size controls
+  - Add font size selector in Layout tab
+  - Create visual preview of font size changes
+  - Implement font size persistence in SettingsManager
+  - Apply font size changes to both home screen and search interface
+  - Add smooth transitions for font size updates
+  - _Requirements: 11.1, 11.2, 11.3_
+
+- [ ] 35. Create enhanced tabbed settings interface
+  - Implement ViewPager2 with TabLayout for settings navigation
+  - Create FavoritesFragment for app selection and management
+  - Add GesturesFragment for swipe app configuration
+  - Implement LayoutFragment for position and font controls
+  - Add central save button for applying all changes
+  - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
+
+- [ ] 36. Implement settings state management
+  - Create AdvancedSettings data model for comprehensive configuration
+  - Implement SettingsManager for centralized settings handling
+  - Add atomic updates for multiple setting changes
+  - Create settings validation and migration system
+  - Implement settings backup and restore capability
+  - _Requirements: 12.6, 12.7_
+
+- [ ] 37. Add comprehensive testing for new features
+
+- [ ] 38. Implement LayoutManager for favorites positioning
+  - Create LayoutManager class to handle positioning configuration
+  - Add LayoutConfig data model with horizontal and vertical position enums
+  - Implement layout position calculations for different screen sizes
+  - Update AppListView to support dynamic positioning
+  - Ensure proper spacing and alignment in all positions
+  - _Requirements: 10.3, 10.4, 10.6_
+
+- [ ] 39. Add position configuration UI in settings
+  - Create Layout tab in settings interface
+  - Implement horizontal position selector (Left/Center/Right)
+  - Add vertical position selector (Top/Center/Bottom)
+  - Create visual preview of position changes
+  - Handle position configuration persistence
+  - _Requirements: 10.1, 10.2, 10.5_
+
+- [ ] 40. Implement font size configuration system
+  - Add FontSize enum with size variants (Small to Extra Large)
+  - Create typography configuration system with Material Expressive
+  - Update AppListView to support dynamic font sizing
+  - Implement font size scaling with proper spacing adjustments
+  - Ensure readability across all font sizes and wallpapers
+  - _Requirements: 11.1, 11.4, 11.5, 11.6_
+
+- [ ] 41. Extend settings UI with font size controls
+  - Add font size selector in Layout tab
+  - Create visual preview of font size changes
+  - Implement font size persistence in SettingsManager
+  - Apply font size changes to both home screen and search interface
+  - Add smooth transitions for font size updates
+  - _Requirements: 11.1, 11.2, 11.3_
+
+- [ ] 42. Create enhanced tabbed settings interface
+  - Implement ViewPager2 with TabLayout for settings navigation
+  - Create FavoritesFragment for app selection and management
+  - Add GesturesFragment for swipe app configuration
+  - Implement LayoutFragment for position and font controls
+  - Add central save button for applying all changes
+  - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
+
+- [ ] 43. Implement settings state management
+  - Create AdvancedSettings data model for comprehensive configuration
+  - Implement SettingsManager for centralized settings handling
+  - Add atomic updates for multiple setting changes
+  - Create settings validation and migration system
+  - Implement settings backup and restore capability
+  - _Requirements: 12.6, 12.7_
+
+- [ ] 44. Add comprehensive testing for new features
+  - Write unit tests for GestureManager swipe detection
+  - Add UI tests for layout positioning and font size changes
+  - Test settings tab navigation and state management
+  - Verify gesture configurations across different devices
+  - Add performance tests for settings operations
+  - _Requirements: 9.1-9.6, 10.1-10.6, 11.1-11.6, 12.1-12.7_

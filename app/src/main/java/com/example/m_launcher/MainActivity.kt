@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.example.m_launcher.data.FavoriteApp
 import com.example.m_launcher.manager.FavoritesManager
 import com.example.m_launcher.utils.ErrorHandler
+import com.example.m_launcher.gesture.GestureManager
 
 class MainActivity : AppCompatActivity() {
     
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appListView: AppListView
     private lateinit var favoritesManager: FavoritesManager
     private lateinit var gestureDetector: GestureDetector
+    private lateinit var gestureManager: GestureManager
     private lateinit var vibrator: Vibrator
     private lateinit var rootView: View
     
@@ -56,8 +58,8 @@ class MainActivity : AppCompatActivity() {
         // Initialize dynamic text contrast system
         setupDynamicTextContrast()
         
-        // Set up long press gesture detection
-        setupLongPressGesture()
+        // Set up gesture detection
+        setupGestureDetection()
         
         // Load and display favorite apps
         loadFavoriteApps()
@@ -164,9 +166,10 @@ class MainActivity : AppCompatActivity() {
     }
     
     /**
-     * Set up gesture detection for settings access and search interface
+     * Set up gesture detection for settings access, search, and directional swipes
      */
-    private fun setupLongPressGesture() {
+    private fun setupGestureDetection() {
+        // Set up long press gesture detection
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onLongPress(e: MotionEvent) {
                 Log.d(TAG, "Long press detected, opening settings")
@@ -214,12 +217,61 @@ class MainActivity : AppCompatActivity() {
             }
         })
         
-        // Set touch listener on root view to detect gestures anywhere on screen
+        // Set up left/right swipe gesture detection
+        gestureManager = GestureManager(
+            context = this,
+            onLeftSwipe = { handleLeftSwipe() },
+            onRightSwipe = { handleRightSwipe() }
+        )
+        
+        // Set up touch event handling on root view to detect gestures anywhere on screen
         rootView.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
+            // Let both gesture detectors handle the event
+            val longPressHandled = gestureDetector.onTouchEvent(event)
+            val swipeHandled = gestureManager.onTouchEvent(event)
+            
+            longPressHandled || swipeHandled
         }
         
-        Log.d(TAG, "Gesture detection configured (long press and swipe up)")
+        Log.d(TAG, "Gesture detection configured (long press, swipe up, left/right swipes)")
+    }
+
+    /**
+     * Handle left swipe gesture
+     * TODO: Implement actual app launching based on user configuration
+     */
+    private fun handleLeftSwipe() {
+        Log.d(TAG, "Left swipe detected")
+        // Show temporary visual feedback for testing
+        android.widget.Toast.makeText(
+            this,
+            "Left Swipe Detected",
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
+        performHapticFeedback()
+    }
+    
+    /**
+     * Handle right swipe gesture
+     * TODO: Implement actual app launching based on user configuration
+     */
+    private fun handleRightSwipe() {
+        Log.d(TAG, "Right swipe detected")
+        // Show temporary visual feedback for testing
+        android.widget.Toast.makeText(
+            this,
+            "Right Swipe Detected",
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
+        performHapticFeedback()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        // Let both gesture detectors handle the event
+        val longPressHandled = gestureDetector.onTouchEvent(event)
+        val swipeHandled = gestureManager.onTouchEvent(event)
+        
+        return longPressHandled || swipeHandled || super.onTouchEvent(event)
     }
     
     /**
