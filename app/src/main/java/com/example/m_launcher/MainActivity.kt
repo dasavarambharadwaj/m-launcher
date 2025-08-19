@@ -1,18 +1,38 @@
 package com.example.m_launcher
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.util.Log
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.m_launcher.data.FavoriteApp
+import com.example.m_launcher.manager.FavoritesManager
+import com.example.m_launcher.utils.ErrorHandler
 
 class MainActivity : AppCompatActivity() {
     
     private lateinit var wallpaperContrastManager: WallpaperContrastManager
     private lateinit var appListView: AppListView
+    private lateinit var favoritesManager: FavoritesManager
+    private lateinit var gestureDetector: GestureDetector
+    private lateinit var vibrator: Vibrator
+    private lateinit var rootView: View
+    
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val SETTINGS_REQUEST_CODE = 1001
+        private const val LONG_PRESS_DURATION_MS = 500L
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +40,8 @@ class MainActivity : AppCompatActivity() {
         // Set the main launcher layout
         setContentView(R.layout.activity_main)
         
-        // Initialize AppListView reference
-        appListView = findViewById(R.id.app_list_view)
+        // Initialize views and managers
+        initializeComponents()
         
         // Apply Material Expressive LauncherTheme and configure launcher window
         setupMaterialExpressiveLauncher()
@@ -34,6 +54,12 @@ class MainActivity : AppCompatActivity() {
         
         // Initialize dynamic text contrast system
         setupDynamicTextContrast()
+        
+        // Set up long press gesture detection
+        setupLongPressGesture()
+        
+        // Load and display favorite apps
+        loadFavoriteApps()
     }
     
     override fun onResume() {
@@ -45,6 +71,9 @@ class MainActivity : AppCompatActivity() {
         if (::wallpaperContrastManager.isInitialized) {
             wallpaperContrastManager.forceUpdate()
         }
+        
+        // Refresh favorites in case they were changed in settings
+        loadFavoriteApps()
     }
     
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -108,6 +137,164 @@ class MainActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,
             WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
         )
+    }
+    
+    /**
+     * Initialize components and managers
+     */
+    private fun initializeComponents() {
+        // Initialize views
+        appListView = findViewById(R.id.app_list_view)
+        rootView = findViewById(android.R.id.content)
+        
+        // Initialize managers
+        favoritesManager = FavoritesManager(this)
+        vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+        
+        // Set up app click listener
+        appListView.setOnAppClickListener { favorite ->
+            launchApp(favorite)
+        }
+        
+        // Listen for favorites changes
+        favoritesManager.addFavoritesChangeListener {
+            loadFavoriteApps()
+        }
+    }
+    
+    /**
+     * Set up long press gesture detection for settings access
+     */
+    private fun setupLongPressGesture() {
+        gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onLongPress(e: MotionEvent) {
+                Log.d(TAG, "Long press detected, opening settings")
+                
+                // Provide haptic feedback
+                performHapticFeedback()
+                
+                // Navigate to settings
+                openSettings()
+            }
+            
+            override fun onDown(e: MotionEvent): Boolean {
+                // Return true to indicate we want to handle gestures
+                return true
+            }
+        })
+        
+        // Set touch listener on root view to detect gestures anywhere on screen
+        rootView.setOnTouchListener { _, event ->
+            gestureDetector.onTouchEvent(event)
+        }
+        
+        Log.d(TAG, "Long press gesture detection configured")
+    }
+    
+    /**
+     * Load and display favorite apps
+     */
+    private fun loadFavoriteApps() {
+        try {
+            val favorites = favoritesManager.loadFavorites()
+            Log.d(TAG, "Loaded ${favorites.size} favorite apps: ${favorites.map { it.displayName }}")
+            
+            if (favorites.isEmpty()) {
+                Log.w(TAG, "No favorites loaded, this should not happen")
+                // Force load defaults if somehow we get empty list
+                val defaults = favoritesManager.getDefaultFavorites()
+                appListView.updateFavorites(defaults)
+            } else {
+                appListView.updateFavorites(favorites)
+            }
+            
+            // Update text contrast for new apps
+            if (::wallpaperContrastManager.isInitialized) {
+                wallpaperContrastManager.forceUpdate()
+            }
+            
+            Log.d(TAG, "AppListView updated with ${appListView.getAppCount()} apps")
+        } catch (e: Exception) {
+            ErrorHandler.handleFavoritesLoadError(this, e)
+            // Fallback to defaults on error
+            try {
+                val defaults = favoritesManager.getDefaultFavorites()
+                appListView.updateFavorites(defaults)
+                Log.d(TAG, "Loaded default apps as fallback")
+            } catch (fallbackError: Exception) {
+                Log.e(TAG, "Error loading default apps", fallbackError)
+            }
+        }
+    }
+    
+    /**
+     * Launch an app from favorites
+     */
+    private fun launchApp(favorite: FavoriteApp) {
+        try {
+            val launchIntent = packageManager.getLaunchIntentForPackage(favorite.packageName)
+            if (launchIntent != null) {
+                Log.d(TAG, "Launching app: ${favorite.displayName}")
+                startActivity(launchIntent)
+            } else {
+                Log.w(TAG, "No launch intent found for ${favorite.packageName}")
+                ErrorHandler.handleAppLaunchError(this, favorite.displayName, 
+                    RuntimeException("No launch intent available"))
+            }
+        } catch (e: Exception) {
+            ErrorHandler.handleAppLaunchError(this, favorite.displayName, e)
+        }
+    }
+    
+    /**
+     * Perform haptic feedback for long press gesture
+     */
+    private fun performHapticFeedback() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Use VibrationEffect for Android 8.0+
+                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
+                vibrator.vibrate(vibrationEffect)
+            } else {
+                // Fallback for older versions
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(50)
+            }
+            Log.d(TAG, "Haptic feedback performed")
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not perform haptic feedback", e)
+        }
+    }
+    
+    /**
+     * Open settings activity with smooth transition
+     */
+    private fun openSettings() {
+        try {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivityForResult(intent, SETTINGS_REQUEST_CODE)
+            
+            // Apply smooth transition animation
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            
+            Log.d(TAG, "Settings activity launched")
+        } catch (e: Exception) {
+            ErrorHandler.handleSettingsNavigationError(this, e)
+        }
+    }
+    
+    /**
+     * Handle result from settings activity
+     */
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        if (requestCode == SETTINGS_REQUEST_CODE) {
+            Log.d(TAG, "Returned from settings, refreshing favorites")
+            // Refresh favorites when returning from settings
+            loadFavoriteApps()
+        }
     }
     
     /**

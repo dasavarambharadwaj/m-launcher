@@ -11,6 +11,17 @@
     <!-- Launcher theme colors for Material Expressive minimal design -->
     <color name="launcher_text_light">#FFFFFFFF</color>
     <color name="launcher_text_dark">#FF000000</color>
-
     <color name="launcher_background_transparent">#00000000</color>
+    
+    <!-- Dynamic text color that adapts to wallpaper contrast -->
+    <color name="launcher_text_dynamic">#FFFFFF</color>
+    
+    <!-- Secondary text color for less prominent text -->
+    <color name="launcher_text_secondary">#B3FFFFFF</color>
+    
+    <!-- Settings page background with semi-transparency -->
+    <color name="settings_background">#E6000000</color>
+    
+    <!-- Settings toolbar background -->
+    <color name="settings_toolbar_background">#CC000000</color>
 </resources>

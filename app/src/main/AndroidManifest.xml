@@ -5,6 +5,7 @@
     <!-- Permissions for launcher functionality -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -42,6 +43,18 @@
             <meta-data
                 android:name="android.app.home.alternate"
                 android:value="true" />
+        </activity>
+
+        <!-- Settings Activity for favorites configuration -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:theme="@style/LauncherTheme"
+            android:label="Favorites Settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
 
     </application>
