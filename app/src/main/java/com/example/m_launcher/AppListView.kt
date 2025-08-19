@@ -5,8 +5,11 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.example.m_launcher.data.FavoriteApp
+import com.example.m_launcher.data.HorizontalPosition
+import com.example.m_launcher.data.VerticalPosition
 
 /**
  * AppListView - Custom LinearLayout component for displaying configurable favorite apps (1-7)
@@ -22,6 +25,8 @@ class AppListView @JvmOverloads constructor(
     private var appTextViews: MutableList<TextView> = mutableListOf()
     private var currentFavorites: List<FavoriteApp> = emptyList()
     private var onAppClickListener: ((FavoriteApp) -> Unit)? = null
+    private var currentHorizontalPosition: HorizontalPosition = HorizontalPosition.CENTER
+    private var currentVerticalPosition: VerticalPosition = VerticalPosition.CENTER
 
     init {
         setupAppListView()
@@ -31,20 +36,18 @@ class AppListView @JvmOverloads constructor(
      * Configure the LinearLayout with Material Expressive spacing and alignment
      */
     private fun setupAppListView() {
-        // Configure LinearLayout orientation and alignment for centered display
+        // Configure LinearLayout orientation and default alignment (center)
         orientation = VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
 
         // Apply Material Expressive spacing guidelines (24dp between items)
         val spacingPx = resources.getDimensionPixelSize(R.dimen.material_expressive_spacing_large)
         
-        // Set layout parameters for centered positioning
+        // Initial layout parameters; container (e.g., FrameLayout) controls overall placement
         layoutParams = LayoutParams(
             LayoutParams.WRAP_CONTENT,
             LayoutParams.WRAP_CONTENT
-        ).apply {
-            gravity = Gravity.CENTER
-        }
+        )
 
         // Configure padding using Material Expressive guidelines
         val paddingPx = resources.getDimensionPixelSize(R.dimen.material_expressive_padding_medium)
@@ -91,6 +94,48 @@ class AppListView @JvmOverloads constructor(
         // Request layout update
         requestLayout()
     }
+
+    /**
+     * Update positioning according to provided horizontal and vertical enums
+     */
+    fun updatePosition(horizontalPosition: HorizontalPosition, verticalPosition: VerticalPosition) {
+        currentHorizontalPosition = horizontalPosition
+        currentVerticalPosition = verticalPosition
+
+        val containerGravity = when (horizontalPosition) {
+            HorizontalPosition.LEFT -> Gravity.START
+            HorizontalPosition.CENTER -> Gravity.CENTER_HORIZONTAL
+            HorizontalPosition.RIGHT -> Gravity.END
+        } or when (verticalPosition) {
+            VerticalPosition.TOP -> Gravity.TOP
+            VerticalPosition.CENTER -> Gravity.CENTER_VERTICAL
+            VerticalPosition.BOTTOM -> Gravity.BOTTOM
+        }
+
+        // If parent is a FrameLayout (as in activity_main.xml), set its layout_gravity via LayoutParams
+        val params = layoutParams
+        if (params is FrameLayout.LayoutParams) {
+            params.gravity = containerGravity
+            layoutParams = params
+        } else if (params is LayoutParams) {
+            // Fallback for LinearLayout parent
+            params.gravity = containerGravity
+            layoutParams = params
+        }
+
+        // Align children horizontally within this LinearLayout
+        gravity = when (horizontalPosition) {
+            HorizontalPosition.LEFT -> Gravity.START
+            HorizontalPosition.CENTER -> Gravity.CENTER_HORIZONTAL
+            HorizontalPosition.RIGHT -> Gravity.END
+        }
+
+        updateChildTextAlignment()
+        normalizeChildWidths()
+
+        requestLayout()
+        invalidate()
+    }
     
     /**
      * Set click listener for app selection
@@ -109,8 +154,12 @@ class AppListView @JvmOverloads constructor(
             // Apply Material Expressive typography system
             setTextAppearance(R.style.LauncherTextAppearance)
             
-            // Configure text alignment for centered minimal design
-            gravity = Gravity.CENTER
+            // Configure text alignment according to current horizontal position
+            gravity = when (currentHorizontalPosition) {
+                HorizontalPosition.LEFT -> Gravity.START
+                HorizontalPosition.CENTER -> Gravity.CENTER
+                HorizontalPosition.RIGHT -> Gravity.END
+            }
             
             // Ensure single line text display
             setSingleLine(true)
@@ -145,6 +194,36 @@ class AppListView @JvmOverloads constructor(
             
             // Set content description for accessibility
             contentDescription = "Launch ${favorite.displayName}"
+        }
+    }
+
+    private fun updateChildTextAlignment() {
+        val childGravity = when (currentHorizontalPosition) {
+            HorizontalPosition.LEFT -> Gravity.START
+            HorizontalPosition.CENTER -> Gravity.CENTER
+            HorizontalPosition.RIGHT -> Gravity.END
+        }
+        appTextViews.forEach { tv ->
+            tv.gravity = childGravity
+        }
+    }
+
+    private fun normalizeChildWidths() {
+        if (appTextViews.isEmpty()) return
+
+        var maxTextWidth = 0
+        appTextViews.forEach { tv ->
+            val textWidth = tv.paint.measureText(tv.text.toString()).toInt()
+            val total = textWidth + tv.paddingLeft + tv.paddingRight
+            if (total > maxTextWidth) maxTextWidth = total
+        }
+
+        appTextViews.forEach { tv ->
+            val min = tv.minWidth
+            val target = maxOf(maxTextWidth, min)
+            val lp = tv.layoutParams as LayoutParams
+            lp.width = target
+            tv.layoutParams = lp
         }
     }
 

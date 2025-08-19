@@ -121,6 +121,127 @@
                     android:paddingEnd="0dp" />
             </LinearLayout>
 
+            <!-- Layout Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Layout"
+                android:textAppearance="@style/LauncherTextAppearance"
+                android:textSize="@dimen/material_expressive_text_size_title"
+                android:textColor="@color/launcher_text_dynamic"
+                android:layout_marginBottom="@dimen/material_expressive_spacing_medium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Choose favorites position"
+                android:textAppearance="@style/LauncherTextAppearance"
+                android:textSize="14sp"
+                android:textColor="@color/launcher_text_secondary"
+                android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/material_expressive_spacing_large">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Horizontal Position"
+                    android:textAppearance="@style/LauncherTextAppearance"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/position_horizontal_picker"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Center"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Vertical Position"
+                    android:textAppearance="@style/LauncherTextAppearance"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:layout_marginTop="@dimen/material_expressive_spacing_large"
+                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/position_vertical_picker"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Center"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp" />
+
+                <!-- Preview -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Preview"
+                    android:textAppearance="@style/LauncherTextAppearance"
+                    android:textColor="@color/launcher_text_dynamic"
+                    android:layout_marginTop="@dimen/material_expressive_spacing_large"
+                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/material_expressive_padding_medium">
+
+                    <LinearLayout
+                        android:id="@+id/layout_preview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:id="@+id/preview_item_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Phone"
+                            android:textAppearance="@style/LauncherTextAppearance" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/material_expressive_spacing_large" />
+
+                        <TextView
+                            android:id="@+id/preview_item_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Messages"
+                            android:textAppearance="@style/LauncherTextAppearance" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/material_expressive_spacing_large" />
+
+                        <TextView
+                            android:id="@+id/preview_item_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Browser"
+                            android:textAppearance="@style/LauncherTextAppearance" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
             <!-- Available Apps Section -->
             <TextView
                 android:layout_width="match_parent"

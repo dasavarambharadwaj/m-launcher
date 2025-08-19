@@ -230,7 +230,7 @@
   - Handle uninstalled apps in gesture configurations
   - _Requirements: 9.1, 9.2, 9.6_
 
-- [ ] 31. Implement LayoutManager for favorites positioning
+- [x] 31. Implement LayoutManager for favorites positioning
   - Create LayoutManager class to handle positioning configuration
   - Add LayoutConfig data model with horizontal and vertical position enums
   - Implement layout position calculations for different screen sizes
@@ -238,7 +238,7 @@
   - Ensure proper spacing and alignment in all positions
   - _Requirements: 10.3, 10.4, 10.6_
 
-- [ ] 32. Add position configuration UI in settings
+- [x] 32. Add position configuration UI in settings
   - Create Layout tab in settings interface
   - Implement horizontal position selector (Left/Center/Right)
   - Add vertical position selector (Top/Center/Bottom)

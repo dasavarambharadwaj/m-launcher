@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.example.m_launcher.data.FavoriteApp
 import com.example.m_launcher.manager.FavoritesManager
 import com.example.m_launcher.manager.SettingsManager
+import com.example.m_launcher.manager.LayoutManager
 import com.example.m_launcher.utils.ErrorHandler
 import com.example.m_launcher.gesture.GestureManager
 
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var gestureManager: GestureManager
     private lateinit var vibrator: Vibrator
     private lateinit var rootView: View
+    private val layoutManager: LayoutManager = LayoutManager()
     
     companion object {
         private const val TAG = "MainActivity"
@@ -316,6 +318,10 @@ class MainActivity : AppCompatActivity() {
                 appListView.updateFavorites(favorites)
             }
             
+            // Apply layout position from settings
+            val layoutConfig = settingsManager.loadLayoutConfig()
+            layoutManager.applyLayout(appListView, layoutConfig)
+
             // Update text contrast for new apps
             if (::wallpaperContrastManager.isInitialized) {
                 wallpaperContrastManager.forceUpdate()
