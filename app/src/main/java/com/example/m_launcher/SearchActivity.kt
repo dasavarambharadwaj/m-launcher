@@ -203,11 +203,11 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
             
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 // Trigger search as user types for real-time results
-                val query = s?.toString()?.trim() ?: ""
-                Log.d(TAG, "Search query changed: '$query'")
-                
+                val rawQuery = s?.toString() ?: ""
+                Log.d(TAG, "Search query changed (raw): '$rawQuery'")
+
                 // Perform search with real-time filtering
-                performSearch(query)
+                performSearch(rawQuery)
             }
             
             override fun afterTextChanged(s: Editable?) {
@@ -217,6 +217,12 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
         // Handle IME action and enter key
         searchInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                handleSearchSubmit()
+                true
+            } else false
+        }
+        searchInput.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == android.view.KeyEvent.KEYCODE_ENTER && event.action == android.view.KeyEvent.ACTION_UP) {
                 handleSearchSubmit()
                 true
             } else false
@@ -253,13 +259,8 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
     private fun handleSearchSubmit() {
         val adapterCount = searchResultsAdapter.itemCount
         if (adapterCount > 0) {
-            // Launch the first result
-            val field = RecyclerView::class.java.getDeclaredField("mAdapter")
-            field.isAccessible = true
-            val adapter = field.get(searchResults) as SearchResultsAdapter
-            val method = SearchResultsAdapter::class.java.getDeclaredMethod("getItem", Int::class.javaPrimitiveType)
-            method.isAccessible = true
-            val result = method.invoke(adapter, 0) as com.example.m_launcher.manager.SearchManager.SearchResult
+            // Launch the first result via adapter API
+            val result = searchResultsAdapter.getItem(0)
             launchAppFromSearch(result)
         } else {
             // Fallback: web search with default browser
@@ -422,6 +423,12 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
             lastSearchQuery = ""
             return
         }
+        if (query.startsWith(" ")) {
+            // Leading space means prefer Google search prompt instead of app results
+            showGooglePrompt(query.trim())
+            lastSearchQuery = query
+            return
+        }
         
         // Skip search if query hasn't changed (optimization)
         if (query == lastSearchQuery) {
@@ -433,7 +440,7 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
             delay(SEARCH_DEBOUNCE_DELAY)
             
             // Double-check query hasn't changed during delay
-            if (query == searchInput.text.toString().trim()) {
+            if (query == searchInput.text.toString()) {
                 lastSearchQuery = query
                 Log.d(TAG, "Performing debounced search for: '$query'")
                 
@@ -449,6 +456,20 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
     private fun launchAppFromSearch(searchResult: SearchManager.SearchResult) {
         try {
             val app = searchResult.app
+            // If this is the Google prompt (non-launchable), open web search
+            if (!app.isLaunchable || app.packageName.isBlank()) {
+                val q = searchInput.text.toString().trim()
+                if (q.isNotEmpty()) {
+                    val uri = android.net.Uri.parse("https://www.google.com/search?q=" + java.net.URLEncoder.encode(q, "UTF-8"))
+                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
+                    hideKeyboard()
+                    startActivity(intent)
+                    finish()
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                }
+                return
+            }
+
             val launchIntent = packageManager.getLaunchIntentForPackage(app.packageName)
             
             if (launchIntent != null) {
@@ -480,9 +501,33 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
     override fun onSearchResults(results: List<SearchManager.SearchResult>) {
         val limitedResults = results.take(MAX_SEARCH_RESULTS)
         Log.d(TAG, "Received ${results.size} search results, displaying ${limitedResults.size}")
-        
-        // Update RecyclerView with limited search results for optimal performance
-        searchResultsAdapter.updateResults(limitedResults)
+
+        if (limitedResults.isEmpty()) {
+            // Show a Google search prompt row
+            val query = searchInput.text.toString().trim()
+            if (query.isNotEmpty()) {
+                showGooglePrompt(query)
+            } else {
+                searchResultsAdapter.clearResults()
+            }
+        } else {
+            // Update RecyclerView with limited search results for optimal performance
+            searchResultsAdapter.updateResults(limitedResults)
+        }
+    }
+
+    private fun showGooglePrompt(query: String) {
+        val googlePrompt = SearchManager.SearchResult(
+            app = com.example.m_launcher.data.InstalledApp(
+                packageName = "",
+                displayName = "Search Google for \"$query\"",
+                icon = null,
+                isLaunchable = false
+            ),
+            relevanceScore = 0.0,
+            matchType = SearchManager.MatchType.EXACT_CONTAINS
+        )
+        searchResultsAdapter.updateResults(listOf(googlePrompt))
     }
     
     /**

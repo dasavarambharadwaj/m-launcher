@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.m_launcher.R
 import com.example.m_launcher.manager.SearchManager
@@ -23,6 +24,7 @@ class SearchResultsAdapter(
     
     class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val appNameText: TextView = itemView.findViewById(R.id.app_name_text)
+        val appIcon: ImageView = itemView.findViewById(R.id.app_icon)
     }
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
@@ -38,6 +40,8 @@ class SearchResultsAdapter(
         // Display app name in white text without icons maintaining minimal design
         holder.appNameText.text = app.displayName
         holder.appNameText.setTextColor(android.graphics.Color.WHITE)
+        // Hide icon by default for minimal design
+        holder.appIcon.visibility = View.GONE
 
         // Apply font size from settings for search results
         try {
