@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.app.AlertDialog
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.m_launcher.R
@@ -88,17 +89,19 @@ class SearchResultsAdapter(
         val canUninstall = !isSystemApp(context, app.packageName)
         if (canUninstall) options.add("Uninstall")
 
-        val builder = android.app.AlertDialog.Builder(context, R.style.DarkAlertDialog)
+        val builder = AlertDialog.Builder(context, R.style.DarkAlertDialog)
             .setTitle(app.displayName)
-            .setItems(options.toTypedArray()) { dialog, which ->
+            .setItems(options.toTypedArray()) { dialogInterface, which ->
                 when (options[which]) {
                     "App info" -> openAppInfo(context, app.packageName)
                     "Uninstall" -> requestUninstall(context, app.packageName)
                 }
-                dialog.dismiss()
+                dialogInterface.dismiss()
             }
             .setNegativeButton("Cancel", null)
-        builder.show()
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun openAppInfo(context: android.content.Context, packageName: String) {

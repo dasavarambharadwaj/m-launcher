@@ -42,7 +42,7 @@ class SearchActivity : AppCompatActivity(), SearchManager.SearchListener {
     companion object {
         private const val TAG = "SearchActivity"
         private const val SEARCH_DEBOUNCE_DELAY = 150L // Milliseconds
-        private const val MAX_SEARCH_RESULTS = 15 // Limit for performance
+        private const val MAX_SEARCH_RESULTS = 1500 // Limit for performance
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
