@@ -28,4 +28,21 @@
         <!-- Material Expressive touch feedback -->
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
+
+    <!-- Dark AlertDialog theme -->
+    <style name="DarkAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:background">@android:color/black</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/DarkAlertDialog.Title</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/DarkAlertDialog.Body</item>
+        <item name="materialAlertDialogTheme">@style/DarkAlertDialog</item>
+    </style>
+
+    <style name="DarkAlertDialog.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="DarkAlertDialog.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>

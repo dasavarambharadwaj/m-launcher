@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.m_launcher.R
 import com.example.m_launcher.manager.SearchManager
+import com.example.m_launcher.manager.SettingsManager
+import com.example.m_launcher.data.FontSize
 
 class SearchResultsAdapter(
     private val onAppClick: (SearchManager.SearchResult) -> Unit
@@ -35,6 +37,16 @@ class SearchResultsAdapter(
         // Display app name in white text without icons maintaining minimal design
         holder.appNameText.text = app.displayName
         holder.appNameText.setTextColor(android.graphics.Color.WHITE)
+
+        // Apply font size from settings for search results
+        try {
+            val context = holder.itemView.context
+            val settings = SettingsManager(context)
+            val size = settings.loadFontSize()
+            holder.appNameText.textSize = size.spValue
+        } catch (_: Exception) {
+            // Ignore if settings unavailable
+        }
         
         // Set up click listener for app launching
         holder.itemView.setOnClickListener {

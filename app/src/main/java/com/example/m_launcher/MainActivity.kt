@@ -322,6 +322,10 @@ class MainActivity : AppCompatActivity() {
             val layoutConfig = settingsManager.loadLayoutConfig()
             layoutManager.applyLayout(appListView, layoutConfig)
 
+            // Apply font size
+            val fontSize = settingsManager.loadFontSize()
+            appListView.updateFontSize(fontSize)
+
             // Update text contrast for new apps
             if (::wallpaperContrastManager.isInitialized) {
                 wallpaperContrastManager.forceUpdate()

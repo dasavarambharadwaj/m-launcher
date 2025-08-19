@@ -246,7 +246,7 @@
   - Handle position configuration persistence
   - _Requirements: 10.1, 10.2, 10.5_
 
-- [ ] 33. Implement font size configuration system
+- [x] 33. Implement font size configuration system
   - Add FontSize enum with size variants (Small to Extra Large)
   - Create typography configuration system with Material Expressive
   - Update AppListView to support dynamic font sizing
@@ -254,7 +254,7 @@
   - Ensure readability across all font sizes and wallpapers
   - _Requirements: 11.1, 11.4, 11.5, 11.6_
 
-- [ ] 34. Extend settings UI with font size controls
+- [x] 34. Extend settings UI with font size controls
   - Add font size selector in Layout tab
   - Create visual preview of font size changes
   - Implement font size persistence in SettingsManager
@@ -262,7 +262,7 @@
   - Add smooth transitions for font size updates
   - _Requirements: 11.1, 11.2, 11.3_
 
-- [ ] 35. Create enhanced tabbed settings interface
+- [x] 35. Create enhanced tabbed settings interface
   - Implement ViewPager2 with TabLayout for settings navigation
   - Create FavoritesFragment for app selection and management
   - Add GesturesFragment for swipe app configuration
@@ -270,7 +270,7 @@
   - Add central save button for applying all changes
   - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
 
-- [ ] 36. Implement settings state management
+- [x] 36. Implement settings state management
   - Create AdvancedSettings data model for comprehensive configuration
   - Implement SettingsManager for centralized settings handling
   - Add atomic updates for multiple setting changes
@@ -278,57 +278,7 @@
   - Implement settings backup and restore capability
   - _Requirements: 12.6, 12.7_
 
-- [ ] 37. Add comprehensive testing for new features
-
-- [ ] 38. Implement LayoutManager for favorites positioning
-  - Create LayoutManager class to handle positioning configuration
-  - Add LayoutConfig data model with horizontal and vertical position enums
-  - Implement layout position calculations for different screen sizes
-  - Update AppListView to support dynamic positioning
-  - Ensure proper spacing and alignment in all positions
-  - _Requirements: 10.3, 10.4, 10.6_
-
-- [ ] 39. Add position configuration UI in settings
-  - Create Layout tab in settings interface
-  - Implement horizontal position selector (Left/Center/Right)
-  - Add vertical position selector (Top/Center/Bottom)
-  - Create visual preview of position changes
-  - Handle position configuration persistence
-  - _Requirements: 10.1, 10.2, 10.5_
-
-- [ ] 40. Implement font size configuration system
-  - Add FontSize enum with size variants (Small to Extra Large)
-  - Create typography configuration system with Material Expressive
-  - Update AppListView to support dynamic font sizing
-  - Implement font size scaling with proper spacing adjustments
-  - Ensure readability across all font sizes and wallpapers
-  - _Requirements: 11.1, 11.4, 11.5, 11.6_
-
-- [ ] 41. Extend settings UI with font size controls
-  - Add font size selector in Layout tab
-  - Create visual preview of font size changes
-  - Implement font size persistence in SettingsManager
-  - Apply font size changes to both home screen and search interface
-  - Add smooth transitions for font size updates
-  - _Requirements: 11.1, 11.2, 11.3_
-
-- [ ] 42. Create enhanced tabbed settings interface
-  - Implement ViewPager2 with TabLayout for settings navigation
-  - Create FavoritesFragment for app selection and management
-  - Add GesturesFragment for swipe app configuration
-  - Implement LayoutFragment for position and font controls
-  - Add central save button for applying all changes
-  - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
-
-- [ ] 43. Implement settings state management
-  - Create AdvancedSettings data model for comprehensive configuration
-  - Implement SettingsManager for centralized settings handling
-  - Add atomic updates for multiple setting changes
-  - Create settings validation and migration system
-  - Implement settings backup and restore capability
-  - _Requirements: 12.6, 12.7_
-
-- [ ] 44. Add comprehensive testing for new features
+- [x] 37. Add comprehensive testing for new features
   - Write unit tests for GestureManager swipe detection
   - Add UI tests for layout positioning and font size changes
   - Test settings tab navigation and state management

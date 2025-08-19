@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#000000">
+
+    <TextView
+        android:id="@+id/gestures_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gestures"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Assign apps for left and right swipes"
+        android:textColor="#B3FFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Left Swipe App"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/left_swipe_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select app"
+        android:textColor="#FFFFFF"
+        android:background="@android:color/transparent" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Right Swipe App"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/right_swipe_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select app"
+        android:textColor="#FFFFFF"
+        android:background="@android:color/transparent" />
+
+</LinearLayout>
+
+

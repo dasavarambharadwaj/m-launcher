@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/settings_background"
+    android:background="#000000"
     android:fitsSystemWindows="true">
 
     <!-- Material Toolbar -->
@@ -12,272 +12,36 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/settings_toolbar_background"
+        android:background="#000000"
         android:elevation="4dp"
-        app:titleTextColor="@color/launcher_text_dynamic"
-        app:navigationIconTint="@color/launcher_text_dynamic" />
+        app:titleTextColor="#FFFFFF"
+        app:navigationIconTint="#FFFFFF" />
 
-    <!-- Main Content ScrollView -->
-    <ScrollView
+    <!-- Tabs -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        app:tabTextColor="#88FFFFFF"
+        app:tabSelectedTextColor="#FFFFFF"
+        app:tabIndicatorColor="#FFFFFF" />
+
+    <!-- Pager -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/material_expressive_padding_medium">
-
-            <!-- Selected Favorites Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Selected Favorites"
-                android:textAppearance="@style/LauncherTextAppearance"
-                android:textSize="@dimen/material_expressive_text_size_title"
-                android:textColor="@color/launcher_text_dynamic"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_medium" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Drag to reorder • Swipe to remove • Maximum 7 apps"
-                android:textAppearance="@style/LauncherTextAppearance"
-                android:textSize="14sp"
-                android:textColor="@color/launcher_text_secondary"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_medium" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/favorites_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_large"
-                android:nestedScrollingEnabled="false" />
-
-            <!-- Gestures Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Gestures"
-                android:textAppearance="@style/LauncherTextAppearance"
-                android:textSize="@dimen/material_expressive_text_size_title"
-                android:textColor="@color/launcher_text_dynamic"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_medium" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Assign apps for left and right swipes"
-                android:textAppearance="@style/LauncherTextAppearance"
-                android:textSize="14sp"
-                android:textColor="@color/launcher_text_secondary"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_large">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Left Swipe App"
-                    android:textAppearance="@style/LauncherTextAppearance"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/left_swipe_picker"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Select app"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:background="@android:color/transparent"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Right Swipe App"
-                    android:textAppearance="@style/LauncherTextAppearance"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:layout_marginTop="@dimen/material_expressive_spacing_large"
-                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/right_swipe_picker"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Select app"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:background="@android:color/transparent"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp" />
-            </LinearLayout>
-
-            <!-- Layout Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Layout"
-                android:textAppearance="@style/LauncherTextAppearance"
-                android:textSize="@dimen/material_expressive_text_size_title"
-                android:textColor="@color/launcher_text_dynamic"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_medium" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Choose favorites position"
-                android:textAppearance="@style/LauncherTextAppearance"
-                android:textSize="14sp"
-                android:textColor="@color/launcher_text_secondary"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_large">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Horizontal Position"
-                    android:textAppearance="@style/LauncherTextAppearance"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/position_horizontal_picker"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Center"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:background="@android:color/transparent"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Vertical Position"
-                    android:textAppearance="@style/LauncherTextAppearance"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:layout_marginTop="@dimen/material_expressive_spacing_large"
-                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/position_vertical_picker"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Center"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:background="@android:color/transparent"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp" />
-
-                <!-- Preview -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Preview"
-                    android:textAppearance="@style/LauncherTextAppearance"
-                    android:textColor="@color/launcher_text_dynamic"
-                    android:layout_marginTop="@dimen/material_expressive_spacing_large"
-                    android:layout_marginBottom="@dimen/material_expressive_spacing_small" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/material_expressive_padding_medium">
-
-                    <LinearLayout
-                        android:id="@+id/layout_preview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_gravity="center">
-
-                        <TextView
-                            android:id="@+id/preview_item_1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Phone"
-                            android:textAppearance="@style/LauncherTextAppearance" />
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/material_expressive_spacing_large" />
-
-                        <TextView
-                            android:id="@+id/preview_item_2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Messages"
-                            android:textAppearance="@style/LauncherTextAppearance" />
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/material_expressive_spacing_large" />
-
-                        <TextView
-                            android:id="@+id/preview_item_3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Browser"
-                            android:textAppearance="@style/LauncherTextAppearance" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </LinearLayout>
-
-            <!-- Available Apps Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Available Apps"
-                android:textAppearance="@style/LauncherTextAppearance"
-                android:textSize="@dimen/material_expressive_text_size_title"
-                android:textColor="@color/launcher_text_dynamic"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_medium" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tap to add to favorites"
-                android:textAppearance="@style/LauncherTextAppearance"
-                android:textSize="14sp"
-                android:textColor="@color/launcher_text_secondary"
-                android:layout_marginBottom="@dimen/material_expressive_spacing_medium" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/installed_apps_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
-
-        </LinearLayout>
-
-    </ScrollView>
+        android:background="#000000" />
 
     <!-- Action Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/material_expressive_padding_medium"
-        android:background="@color/settings_toolbar_background"
+        android:padding="16dp"
+        android:background="#000000"
         android:elevation="4dp">
 
         <com.google.android.material.button.MaterialButton
@@ -286,9 +50,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginEnd="@dimen/material_expressive_spacing_small"
+            android:layout_marginEnd="8dp"
             android:text="Cancel"
-            android:textColor="@color/launcher_text_dynamic"
+            android:textColor="#FFFFFF"
             android:background="@android:color/transparent" />
 
         <com.google.android.material.button.MaterialButton
@@ -297,9 +61,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/material_expressive_spacing_small"
+            android:layout_marginStart="8dp"
             android:text="Save"
-            android:textColor="@color/launcher_text_dynamic"
+            android:textColor="#FFFFFF"
             android:background="@android:color/transparent" />
 
     </LinearLayout>

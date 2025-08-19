@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.example.m_launcher.data.FavoriteApp
 import com.example.m_launcher.data.HorizontalPosition
 import com.example.m_launcher.data.VerticalPosition
+import com.example.m_launcher.data.FontSize
 
 /**
  * AppListView - Custom LinearLayout component for displaying configurable favorite apps (1-7)
@@ -27,6 +28,7 @@ class AppListView @JvmOverloads constructor(
     private var onAppClickListener: ((FavoriteApp) -> Unit)? = null
     private var currentHorizontalPosition: HorizontalPosition = HorizontalPosition.CENTER
     private var currentVerticalPosition: VerticalPosition = VerticalPosition.CENTER
+    private var currentFontSize: FontSize = FontSize.MEDIUM
 
     init {
         setupAppListView()
@@ -133,6 +135,16 @@ class AppListView @JvmOverloads constructor(
         updateChildTextAlignment()
         normalizeChildWidths()
 
+        requestLayout()
+        invalidate()
+    }
+
+    fun updateFontSize(fontSize: FontSize) {
+        currentFontSize = fontSize
+        val sizeSp = currentFontSize.spValue
+        appTextViews.forEach { tv ->
+            tv.textSize = sizeSp
+        }
         requestLayout()
         invalidate()
     }

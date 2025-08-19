@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.example.m_launcher.data.GestureConfig
 import com.example.m_launcher.data.LayoutConfig
+import com.example.m_launcher.data.FontSize
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -20,6 +21,7 @@ class SettingsManager(context: Context) {
         private const val PREFS_NAME = "launcher_settings"
         private const val KEY_GESTURE_CONFIG = "gesture_config"
         private const val KEY_LAYOUT_CONFIG = "layout_config"
+        private const val KEY_FONT_SIZE = "font_size"
     }
 
     fun loadGestureConfig(): GestureConfig {
@@ -60,6 +62,25 @@ class SettingsManager(context: Context) {
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to save layout config", e)
+            false
+        }
+    }
+
+    fun loadFontSize(): FontSize {
+        return try {
+            val name = prefs.getString(KEY_FONT_SIZE, FontSize.MEDIUM.name)
+            FontSize.valueOf(name!!)
+        } catch (_: Exception) {
+            FontSize.MEDIUM
+        }
+    }
+
+    fun saveFontSize(fontSize: FontSize): Boolean {
+        return try {
+            prefs.edit().putString(KEY_FONT_SIZE, fontSize.name).apply()
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to save font size", e)
             false
         }
     }
